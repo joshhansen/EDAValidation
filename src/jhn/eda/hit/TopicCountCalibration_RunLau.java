@@ -24,8 +24,13 @@ import jhn.util.Log;
 
 
 public class TopicCountCalibration_RunLau implements AutoCloseable {
+	private final String dataset;
 	private LauEtAl lauEtAl;
 	
+	public TopicCountCalibration_RunLau(String dataset) {
+		this.dataset = dataset;
+	}
+
 	public void init() throws Exception {
 		IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(jhn.eda.Paths.topicWordIndexDir("wp_lucene4"))));
 		IndexReader titleIdx = IndexReader.open(FSDirectory.open(new File(jhn.Paths.titleIndexDir())));
@@ -40,7 +45,7 @@ public class TopicCountCalibration_RunLau implements AutoCloseable {
 		conf.putInt(Options.TITLE_UNION_TOP_N, 10);
 		conf.putBool(Options.SPOOF_DELAY, false);
 		
-		Log log = new Log(System.out, Paths.topicCountCalibrationLogFilename());
+		Log log = new Log(System.out, Paths.topicCountCalibrationLogFilename(dataset));
 		log.println("Lau, et al. configuration:");
 		log.println(conf);
 		
@@ -60,8 +65,8 @@ public class TopicCountCalibration_RunLau implements AutoCloseable {
 	}
 
 	private void runLau(int numTopics, int run) throws Exception {
-		String keysFilename = Paths.topicCountCalibrationKeysFilename(numTopics, run);
-		String topicLabelsFilename = Paths.topicCountCalibrationLauLabelsFilename(numTopics, run);
+		String keysFilename = Paths.topicCountCalibrationKeysFilename(dataset, numTopics, run);
+		String topicLabelsFilename = Paths.topicCountCalibrationLauLabelsFilename(dataset, numTopics, run);
 		lauEtAl.labelAllTopics(keysFilename, topicLabelsFilename);
 	}
 	
@@ -79,7 +84,7 @@ public class TopicCountCalibration_RunLau implements AutoCloseable {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		try(TopicCountCalibration_RunLau tcc_rl = new TopicCountCalibration_RunLau()) {
+		try(TopicCountCalibration_RunLau tcc_rl = new TopicCountCalibration_RunLau("reuters21578")) {
 			tcc_rl.init();
 			tcc_rl.run();
 		}
