@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate;
 
 public class Paths {
 //	/Projects/Output/LDA/results/reuters21578/hitcalibration

@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate;
 
 public interface TraceGenerator {
 	String[] generateTrace();

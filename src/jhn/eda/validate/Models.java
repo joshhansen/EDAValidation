@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate;
 
 public enum Models {
 	EDA,

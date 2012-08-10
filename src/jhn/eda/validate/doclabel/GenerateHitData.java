@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate.doclabel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,36 +27,35 @@ import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.idx.IntIndex;
 import jhn.util.Util;
 
-public class GenerateDocumentLabelHITData {
+public class GenerateHitData {
 	public static IntIntIntCounterMap docTopicCounts(String sampleSummaryFilename) throws Exception {
 		IntIntIntCounterMap counts = new IntIntIntRAMCounterMap();
 		
-		BufferedReader r = new BufferedReader(new FileReader(sampleSummaryFilename));
-		
-		int docNum;
-		int lineNum = 0;
-		String tmp = null;
-		String[] parts;
-		String[] subparts;
-		while( (tmp=r.readLine()) != null) {
-			if(!tmp.startsWith("#")) {
-				parts = tmp.split("\\s+");
-				
-				docNum = Integer.parseInt(parts[1]);
-				
-				for(int i = 3; i < parts.length; i++) {
-					subparts = parts[i].split(":");
-					counts.set(docNum, Integer.parseInt(subparts[0]), Integer.parseInt(subparts[1]));
-				}
-				
-				lineNum++;
-				System.out.print('.');
-				if(lineNum > 0 && lineNum % 120 == 0) {
-					System.out.println(lineNum);
+		try(BufferedReader r = new BufferedReader(new FileReader(sampleSummaryFilename))) {
+			int docNum;
+			int lineNum = 0;
+			String tmp = null;
+			String[] parts;
+			String[] subparts;
+			while( (tmp=r.readLine()) != null) {
+				if(!tmp.startsWith("#")) {
+					parts = tmp.split("\\s+");
+					
+					docNum = Integer.parseInt(parts[1]);
+					
+					for(int i = 3; i < parts.length; i++) {
+						subparts = parts[i].split(":");
+						counts.set(docNum, Integer.parseInt(subparts[0]), Integer.parseInt(subparts[1]));
+					}
+					
+					lineNum++;
+					System.out.print('.');
+					if(lineNum > 0 && lineNum % 120 == 0) {
+						System.out.println(lineNum);
+					}
 				}
 			}
 		}
-		r.close();
 		
 		return counts;
 	}
@@ -64,19 +63,18 @@ public class GenerateDocumentLabelHITData {
 	public static Int2ObjectMap<String> docSources(String sampleSummaryFilename) throws Exception {
 		Int2ObjectMap<String> sources = new Int2ObjectOpenHashMap<>();
 		
-		BufferedReader r = new BufferedReader(new FileReader(sampleSummaryFilename));
-		
-		int docNum;
-		String tmp = null;
-		String[] parts;
-		while( (tmp=r.readLine()) != null) {
-			if(!tmp.startsWith("#")) {
-				parts = tmp.split("\\s+");
-				docNum = Integer.parseInt(parts[1]);
-				sources.put(docNum, parts[2]);
+		try(BufferedReader r = new BufferedReader(new FileReader(sampleSummaryFilename))) {
+			int docNum;
+			String tmp = null;
+			String[] parts;
+			while( (tmp=r.readLine()) != null) {
+				if(!tmp.startsWith("#")) {
+					parts = tmp.split("\\s+");
+					docNum = Integer.parseInt(parts[1]);
+					sources.put(docNum, parts[2]);
+				}
 			}
 		}
-		r.close();
 		
 		return sources;
 	}
@@ -108,40 +106,38 @@ public class GenerateDocumentLabelHITData {
 		IntIndex topicMapping = (IntIndex) Util.deserialize(topicMappingFilename);
 		System.out.println("done.");
 		
-		PrintStream w = new PrintStream(new FileOutputStream(outputFilename));
-//		w.println("docnum,source,topic1num,topic1globalnum,\"topic1label\",...,topicNnum,topicNglobalnum,\"topicNlabel\"");
-		w.println("docnum,source,topic1label,topic2label,topic3label,topic4label,topic5label,topic6label,topic7label,topic8label,topic9label,topic10label");
-		
-		int topicNum;
-		int globalTopicNum;
-		String label;
-		
-		@SuppressWarnings("unchecked")
-		Int2ObjectMap.Entry<Counter<Integer,Integer>>[] entries = docTopicCounts.int2ObjectEntrySet().toArray(new Int2ObjectMap.Entry[0]);
-		Arrays.sort(entries, cmp);
-		
-		for(Int2ObjectMap.Entry<Counter<Integer,Integer>> entry : entries) {
-			w.print(entry.getIntKey());
-			w.print(',');
-			w.print(sources.get(entry.getIntKey()));
+		try(PrintStream w = new PrintStream(new FileOutputStream(outputFilename))) {
+			w.println("docnum,source,topic1label,topic2label,topic3label,topic4label,topic5label,topic6label,topic7label,topic8label,topic9label,topic10label");
 			
-			for(Int2IntMap.Entry count : ((IntIntCounter)entry.getValue()).fastTopN(topNlabels)) {
-				topicNum = count.getIntKey();
-				globalTopicNum = topicMapping.objectAtI(topicNum);
-				label = labels.lookupObject(globalTopicNum).toString();
+			int topicNum;
+			int globalTopicNum;
+			String label;
+			
+			@SuppressWarnings("unchecked")
+			Int2ObjectMap.Entry<Counter<Integer,Integer>>[] entries = docTopicCounts.int2ObjectEntrySet().toArray(new Int2ObjectMap.Entry[0]);
+			Arrays.sort(entries, cmp);
+			
+			for(Int2ObjectMap.Entry<Counter<Integer,Integer>> entry : entries) {
+				w.print(entry.getIntKey());
+				w.print(',');
+				w.print(sources.get(entry.getIntKey()));
 				
-//				w.print(',');
-//				w.print(topicNum);
-//				w.print(',');
-//				w.print(globalTopicNum);
-				w.print(",\"");
-				w.print(label);
-				w.print("\"");
+				for(Int2IntMap.Entry count : ((IntIntCounter)entry.getValue()).fastTopN(topNlabels)) {
+					topicNum = count.getIntKey();
+					globalTopicNum = topicMapping.objectAtI(topicNum);
+					label = labels.lookupObject(globalTopicNum).toString();
+					
+	//				w.print(',');
+	//				w.print(topicNum);
+	//				w.print(',');
+	//				w.print(globalTopicNum);
+					w.print(",\"");
+					w.print(label);
+					w.print("\"");
+				}
+				w.println();
 			}
-			w.println();
 		}
-		
-		w.close();
 	}
 	
 	public static void main(String[] args) throws Exception {

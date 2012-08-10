@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate.doclabel;
 
 import java.io.File;
 
@@ -7,6 +7,7 @@ import org.apache.lucene.store.FSDirectory;
 
 import jhn.assoc.AssociationMeasure;
 import jhn.assoc.AverageWordWordPMI;
+import jhn.eda.validate.Paths;
 import jhn.lauetal.LauEtAl;
 import jhn.lauetal.Options;
 //import jhn.lauetal.ts.GoogleTitleSearcher;

@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate.doclabel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,11 +20,13 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import jhn.eda.lucene.LuceneLabelAlphabet;
+import jhn.eda.validate.Models;
+import jhn.eda.validate.TraceGenerator;
 import jhn.util.RandUtil;
 
 
 
-public class MergeDocumentLabelHitData {
+public class MergeHitData {
 	private static final Random rand = new Random();
 	private static String loadDocument(String filename) throws Exception {
 		StringBuilder doc = new StringBuilder();
@@ -95,10 +97,13 @@ public class MergeDocumentLabelHitData {
 			while( (line=r.readLine()) != null) {
 				if(!line.startsWith("#")) {
 					String[] parts = line.split("[\",]+");
+					
+					// Skip the leading and trailing quotation marks:
 					String[] labels = new String[parts.length - 2];
 					for(int i = 0; i < labels.length; i++) {
 						labels[i] = parts[i+2];
 					}
+					
 					sources.put(Integer.parseInt(parts[0]), labels);
 				}
 			}
@@ -146,10 +151,7 @@ public class MergeDocumentLabelHitData {
 				do {
 					docNum = rand.nextInt(sources.size());
 					text = loadDocument(sources.get(docNum));
-				} while(!docOK(text));//text.contains("Blah blah blah"));
-				
-	//			final int docNum = rand.nextInt(sources.size());
-	//			String text = loadDocument(sources.get(docNum));
+				} while(!docOK(text));
 				
 				String[] edaLabelArr = edaLabels.get(docNum);
 				String[] lauLabelArr = lauLabels.get(docNum);

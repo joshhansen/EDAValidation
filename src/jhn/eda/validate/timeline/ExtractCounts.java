@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate.timeline;
 
 import java.io.File;
 
@@ -18,12 +18,12 @@ import jhn.eda.typetopiccounts.LuceneTypeTopicCounts;
 import jhn.eda.typetopiccounts.TypeTopicCounts;
 import jhn.util.Util;
 
-public class Timeline_ExtractCounts implements AutoCloseable {
+public class ExtractCounts implements AutoCloseable {
 	private final String topicWordIdxName;
 	private IndexReader topicWordIdx;
 	private TopicCounts srcTopicCounts;
 
-	public Timeline_ExtractCounts(String topicWordIdxName) throws Exception {
+	public ExtractCounts(String topicWordIdxName) throws Exception {
 		this.topicWordIdxName = topicWordIdxName;
 		String topicWordIdxLuceneDir = Paths.topicWordIndexDir(topicWordIdxName);
 		topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxLuceneDir)));
@@ -71,7 +71,7 @@ public class Timeline_ExtractCounts implements AutoCloseable {
 	public static void main(String[] args) throws Exception {
 		final int window = 40;
 		
-		try(Timeline_ExtractCounts tec = new Timeline_ExtractCounts("wp_lucene4")) {
+		try(ExtractCounts tec = new ExtractCounts("wp_lucene4")) {
 			final String timelineDir = jhn.Paths.outputDir("LDA") + "/datasets/sotu_timeline";
 			for(int startYear = 1790; startYear < 2000; startYear += 20) {
 				int endYear = startYear + window;

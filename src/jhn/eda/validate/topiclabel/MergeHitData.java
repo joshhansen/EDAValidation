@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate.topiclabel;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Random;
 
-public class MergeTopicLabelHitData {
+import jhn.eda.validate.Models;
+
+public class MergeHitData {
 	private static final Random rand = new Random();
 	private static void merge(String edaFilename, String lauEtAlFilename, String outputFilename) throws IOException {
 		BufferedReader r1 = new BufferedReader(new FileReader(edaFilename));

@@ -1,7 +1,6 @@
-package jhn.eda.hit;
+package jhn.eda.validate.doclabel;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,6 +16,7 @@ import java.util.regex.Pattern;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+import jhn.eda.validate.Paths;
 import jhn.util.FileExtensionFilter;
 import jhn.util.RandUtil;
 

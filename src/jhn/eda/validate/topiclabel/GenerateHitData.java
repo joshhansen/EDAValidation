@@ -1,4 +1,4 @@
-package jhn.eda.hit;
+package jhn.eda.validate.topiclabel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,7 +24,7 @@ import jhn.idx.IntIndex;
 import jhn.util.Util;
 import jhn.wp.Fields;
 
-public class GenerateTopicLabelHITData {
+public class GenerateHitData {
 	private static IntIntCounter topicCounts(String fastStateFilename) throws Exception {
 		IntIntCounter counts = new IntIntRAMCounter();
 		
