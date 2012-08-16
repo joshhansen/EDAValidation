@@ -54,9 +54,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
-                <configuration>
-                    <mainClass>jhn.eda.hit.TopicCountCalibration_RunLau</mainClass>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -70,7 +67,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.7</source>
-					<target>1.6</target>
+					<target>1.7</target>
 				</configuration>
 			</plugin>
 		</plugins>
