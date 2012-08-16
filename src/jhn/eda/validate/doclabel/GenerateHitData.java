@@ -141,20 +141,27 @@ public class GenerateHitData {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		final int minCount = 2;
+		final int minCount = 0;
 		final String topicWordIdxName = "wp_lucene4";
-		final String datasetName = "reuters21578";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
-		final int run = 17;
+		final String datasetName = "toy_dataset4";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
+//		final int run = 17;
 //		final int iteration = 95;
 		final int lastN = 50;
 		final int topNlabels = 10;
+		final int runCount = 5;
 		
-//		String fastStateFilename =    Paths.fastStateFilename(run, iteration);
-		String sampleSummaryFilename = Paths.sampleSummaryFilename(run, lastN, minCount);
-		String topicWordIdxDir =      Paths.topicWordIndexDir("wp_lucene4");
-		String topicMappingFilename = Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
-		String outputFilename =       Paths.documentLabelHitDataFilename(run, lastN, minCount);
+		final String runsDir = jhn.eda.validate.Paths.outputDir()+"/doclabel/" + datasetName;
 		
-		generate(sampleSummaryFilename, topicWordIdxDir, topicMappingFilename, outputFilename, topNlabels);
+		for(int run = 0; run < runCount; run++) {
+			String runDir = Paths.runDir(runsDir, run);
+			
+	//		String fastStateFilename =    Paths.fastStateFilename(run, iteration);
+			String sampleSummaryFilename = Paths.sampleSummaryFilename(runDir, lastN, minCount);
+			String topicWordIdxDir =      Paths.topicWordIndexDir("wp_lucene4");
+			String topicMappingFilename = Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
+			String outputFilename =       Paths.documentLabelHitDataFilename(runDir, lastN, minCount);
+			
+			generate(sampleSummaryFilename, topicWordIdxDir, topicMappingFilename, outputFilename, topNlabels);
+		}
 	}
 }

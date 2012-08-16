@@ -19,6 +19,7 @@ import cc.mallet.types.LabelAlphabet;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+import jhn.eda.Paths;
 import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.eda.validate.Models;
 import jhn.eda.validate.TraceGenerator;
@@ -232,6 +233,9 @@ public class MergeHitData {
 		final int cmpsPerDoc = 1;
 		final int chooseFromTopN = 1;
 		final double traceProp = 0.1;
+		final String datasetName = "toy_dataset4";
+		final String edaRunDir = Paths.runDir(Paths.defaultRunsDir(), edaRun);
+		final String lauRunDir = jhn.eda.validate.Paths.outputDir()+"/topic count calibration/" + datasetName;
 		
 		String topicWordIdxDir = jhn.eda.Paths.topicWordIndexDir("wp_lucene4");
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
@@ -239,7 +243,8 @@ public class MergeHitData {
 			TraceGenerator traceGen = new DocLabelTraceGen(labels, 10);
 			
 			final String outputFilename = jhn.Paths.outputDir("EDAValidation")
-					+ "/reuters_merged_document_labels"
+					+ "/merged_document_labels"
+					+ "_" + datasetName
 					+ "_docs" + numDocs
 					+ "_cmpsPerDoc" + cmpsPerDoc
 					+ "_tracePrp" + traceProp
@@ -248,9 +253,9 @@ public class MergeHitData {
 					+ "_lau"+lauRun
 					+ "_minTokens" + MIN_TOKENS
 					+ "_minAlphaPct" + MIN_ALPHA_PCT
-					+ "_4.hit.csv";
+					+ "_5.hit.csv";
 			
-			merge(jhn.eda.Paths.documentLabelHitDataFilename(edaRun, edaIt),
+			merge(jhn.eda.Paths.documentLabelHitDataFilename(edaRunDir, edaIt),
 					jhn.lauetal.Paths.documentLabelHitDataFilename(lauRun),
 					outputFilename,
 					numDocs,

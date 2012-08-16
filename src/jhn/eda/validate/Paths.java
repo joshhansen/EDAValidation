@@ -1,9 +1,14 @@
 package jhn.eda.validate;
 
 public class Paths {
+	public static String outputDir() {
+		return jhn.Paths.outputDir("EDAValidation");
+	}
+	
+	
 //	/Projects/Output/LDA/results/reuters21578/hitcalibration
 	public static String topicCountCalibrationDir(String dataset) {
-		return jhn.Paths.outputDir("EDAValidation") + "/topic count calibration/" + dataset;
+		return outputDir() + "/topic count calibration/" + dataset;
 	}
 	
 //	public static String topicCountCalibrationFilename(int numTopics) {
