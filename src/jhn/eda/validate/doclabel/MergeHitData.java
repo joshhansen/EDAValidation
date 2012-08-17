@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
