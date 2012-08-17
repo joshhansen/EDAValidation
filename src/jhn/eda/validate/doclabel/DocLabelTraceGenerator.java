@@ -6,6 +6,7 @@ import java.util.List;
 import cc.mallet.types.LabelAlphabet;
 
 import jhn.eda.validate.TraceGenerator;
+import jhn.util.RandUtil;
 
 class DocLabelTraceGenerator implements TraceGenerator {
 		private LabelAlphabet labels;
@@ -21,7 +22,7 @@ class DocLabelTraceGenerator implements TraceGenerator {
 			List<String> traceParts = new ArrayList<>();
 			
 			for(int i = 0; i < numLabels; i++) {
-				int labelNum = MergeHitData.rand.nextInt(labels.size());
+				int labelNum = RandUtil.rand.nextInt(labels.size());
 				String label = labels.lookupObject(labelNum).toString();
 //				trace.append(",\"").append(label).append("\"");
 				traceParts.add(label);
