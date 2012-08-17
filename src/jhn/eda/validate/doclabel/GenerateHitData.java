@@ -60,7 +60,7 @@ public class GenerateHitData {
 		return counts;
 	}
 	
-	public static Int2ObjectMap<String> docSources(String sampleSummaryFilename) throws Exception {
+	public static Int2ObjectMap<String> docFilenames(String sampleSummaryFilename) throws Exception {
 		Int2ObjectMap<String> sources = new Int2ObjectOpenHashMap<>();
 		
 		try(BufferedReader r = new BufferedReader(new FileReader(sampleSummaryFilename))) {
@@ -94,19 +94,21 @@ public class GenerateHitData {
 		System.out.println("done.");
 		
 		System.out.print("Mapping document sources...");
-		Int2ObjectMap<String> sources = docSources(sampleSummaryFilename);
+		Int2ObjectMap<String> filenames = docFilenames(sampleSummaryFilename);
 		System.out.println("done.");
-		
-		generate(docTopicCounts, sources, topicWordIdxDir, topicMappingFilename, outputFilename, topNlabels);
-	}
-	
-	private static void generate(IntIntIntCounterMap docTopicCounts, Int2ObjectMap<String> sources, String topicWordIdxDir, String topicMappingFilename, String outputFilename, int topNlabels) throws Exception {
-		IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)));
-		LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
 		
 		System.out.print("Deserializing topic mapping...");
 		IntIndex topicMapping = (IntIndex) Util.deserialize(topicMappingFilename);
 		System.out.println("done.");
+		
+		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
+			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
+			generate(docTopicCounts, filenames, labels, topicMapping, topNlabels, outputFilename);
+		}
+	}
+	
+	private static void generate(IntIntIntCounterMap docTopicCounts, Int2ObjectMap<String> docFilenames,
+								   LabelAlphabet labels, IntIndex topicMapping, int topNlabels, String outputFilename) throws Exception {
 		
 		try(PrintStream w = new PrintStream(new FileOutputStream(outputFilename))) {
 			w.println("docnum,source,topic1label,topic2label,topic3label,topic4label,topic5label,topic6label,topic7label,topic8label,topic9label,topic10label");
@@ -122,7 +124,7 @@ public class GenerateHitData {
 			for(Int2ObjectMap.Entry<Counter<Integer,Integer>> entry : entries) {
 				w.print(entry.getIntKey());
 				w.print(',');
-				w.print(sources.get(entry.getIntKey()));
+				w.print(docFilenames.get(entry.getIntKey()));
 				
 				for(Int2IntMap.Entry count : ((IntIntCounter)entry.getValue()).fastTopN(topNlabels)) {
 					topicNum = count.getIntKey();
@@ -135,7 +137,7 @@ public class GenerateHitData {
 				}
 				w.println();
 			}
-		}
+		}//end try
 	}
 	
 	public static void main(String[] args) throws Exception {
