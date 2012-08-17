@@ -1,4 +1,4 @@
-package jhn.eda.validate.timeline;
+package jhn.validation.timeline;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package jhn.eda.validate.topiclabel;
+package jhn.validation.topiclabel;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Random;
 
-import jhn.eda.validate.Models;
+import jhn.validation.Models;
 
 public class MergeHitData {
 	private static final Random rand = new Random();

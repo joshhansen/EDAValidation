@@ -1,4 +1,4 @@
-package jhn.eda.validate.doclabel;
+package jhn.validation.doclabel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -150,7 +150,7 @@ public class GenerateHitData {
 		final int topNlabels = 10;
 		final int runCount = 5;
 		
-		final String runsDir = jhn.eda.validate.Paths.outputDir()+"/doclabel/" + datasetName;
+		final String runsDir = jhn.validation.Paths.outputDir()+"/doclabel/" + datasetName;
 		
 		for(int run = 0; run < runCount; run++) {
 			String runDir = Paths.runDir(runsDir, run);

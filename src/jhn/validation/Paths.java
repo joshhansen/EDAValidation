@@ -1,4 +1,4 @@
-package jhn.eda.validate;
+package jhn.validation;
 
 public class Paths {
 	public static String outputDir() {

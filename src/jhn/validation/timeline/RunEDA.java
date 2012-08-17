@@ -1,4 +1,4 @@
-package jhn.eda.validate.timeline;
+package jhn.validation.timeline;
 
 import jhn.eda.EDA;
 import jhn.eda.listeners.PrintFastState;

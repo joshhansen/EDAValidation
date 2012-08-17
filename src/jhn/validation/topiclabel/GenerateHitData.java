@@ -1,4 +1,4 @@
-package jhn.eda.validate.topiclabel;
+package jhn.validation.topiclabel;
 
 import java.io.BufferedReader;
 import java.io.File;

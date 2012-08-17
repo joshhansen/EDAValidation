@@ -1,4 +1,4 @@
-package jhn.eda.validate.doclabel;
+package jhn.validation.doclabel;
 
 import java.io.File;
 
@@ -47,7 +47,7 @@ public class RunEDA extends jhn.eda.RunEDA {
 	
 	public static void main(String[] args) throws Exception {
 		final int runCount = 5;
-		RunEDA runner = new RunEDA(jhn.eda.validate.Paths.outputDir()+"/doclabel", runCount);
+		RunEDA runner = new RunEDA(jhn.validation.Paths.outputDir()+"/doclabel", runCount);
 		runner.run();
 	}
 

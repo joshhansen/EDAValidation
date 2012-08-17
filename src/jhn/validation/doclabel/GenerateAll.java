@@ -1,4 +1,4 @@
-package jhn.eda.validate.doclabel;
+package jhn.validation.doclabel;
 
 public class GenerateAll {
 	
