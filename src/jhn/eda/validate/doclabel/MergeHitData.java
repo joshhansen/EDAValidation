@@ -28,7 +28,6 @@ import jhn.util.RandUtil;
 
 
 public class MergeHitData {
-	private static final Random rand = new Random();
 	private static String loadDocument(String filename) throws Exception {
 		StringBuilder doc = new StringBuilder();
 		
@@ -150,7 +149,7 @@ public class MergeHitData {
 				int docNum;
 				String text;
 				do {
-					docNum = rand.nextInt(sources.size());
+					docNum = RandUtil.rand.nextInt(sources.size());
 					text = loadDocument(sources.get(docNum));
 				} while(!docOK(text));
 				
