@@ -255,7 +255,7 @@ public class MergeHitData {
 					+ "_5.hit.csv";
 			
 			merge(jhn.eda.Paths.documentLabelHitDataFilename(edaRunDir, edaIt),
-					jhn.lauetal.Paths.documentLabelHitDataFilename(lauRun),
+					jhn.lauetal.Paths.documentLabelHitDataFilename(lauRunDir),
 					outputFilename,
 					numDocs,
 					cmpsPerDoc,
