@@ -48,30 +48,6 @@ public class MergeHitData {
 		return doc.toString();
 	}
 	
-	private static class DocLabelTraceGen implements TraceGenerator {
-		private LabelAlphabet labels;
-		private int numLabels;
-		
-		public DocLabelTraceGen(LabelAlphabet labels, int numLabels) {
-			this.labels = labels;
-			this.numLabels = numLabels;
-		}
-
-		@Override
-		public String[] generateTrace() {
-			List<String> traceParts = new ArrayList<>();
-			
-			for(int i = 0; i < numLabels; i++) {
-				int labelNum = rand.nextInt(labels.size());
-				String label = labels.lookupObject(labelNum).toString();
-//				trace.append(",\"").append(label).append("\"");
-				traceParts.add(label);
-			}
-			
-			return traceParts.toArray(new String[0]);
-		}
-	}
-	
 	private static Int2ObjectMap<String> docSources(String filename) throws Exception {
 		System.out.println(filename);
 		Int2ObjectMap<String> sources = new Int2ObjectOpenHashMap<>();
@@ -239,7 +215,7 @@ public class MergeHitData {
 		String topicWordIdxDir = jhn.eda.Paths.topicWordIndexDir("wp_lucene4");
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
-			TraceGenerator traceGen = new DocLabelTraceGen(labels, 10);
+			TraceGenerator traceGen = new DocLabelTraceGenerator(labels, 10);
 			
 			final String outputFilename = jhn.Paths.outputDir("EDAValidation")
 					+ "/merged_document_labels"
