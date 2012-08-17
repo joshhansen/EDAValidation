@@ -121,7 +121,7 @@ public class MergeHitData {
 		try(PrintStream w = new PrintStream(new FileOutputStream(outputFilename))) {
 			w.println("model1,model2,docnum,doctext,model1label,model2label,model1wplink,model2wplink");
 			
-			for(int i = 0; i < numDocs; i++) {
+			for(int docIterNum = 0; docIterNum < numDocs; docIterNum++) {
 				int docNum;
 				String text;
 				do {
@@ -132,7 +132,7 @@ public class MergeHitData {
 				String[] edaLabelArr = edaLabels.get(docNum);
 				String[] lauLabelArr = lauLabels.get(docNum);
 				
-				for(int j = 0; j < comparisonsPerDoc; j++) {
+				for(int comparisonNum = 0; comparisonNum < comparisonsPerDoc; comparisonNum++) {
 					Models[] models = new Models[2];
 					
 					if(rand.nextDouble() <= traceProportion) {
