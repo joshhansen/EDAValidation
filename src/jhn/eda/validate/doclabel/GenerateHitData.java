@@ -86,7 +86,9 @@ public class GenerateHitData {
 		}
 	};
 	
-	private static void generate(String sampleSummaryFilename, String topicWordIdxDir, String topicMappingFilename, String outputFilename, int topNlabels) throws Exception {
+	private static void generate(String sampleSummaryFilename, String topicWordIdxDir, String topicMappingFilename,
+								   String outputFilename, int topNlabels) throws Exception {
+		
 		System.out.print("Counting topics...");
 		IntIntIntCounterMap docTopicCounts = docTopicCounts(sampleSummaryFilename);
 		System.out.println("done.");
