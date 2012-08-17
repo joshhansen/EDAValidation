@@ -111,11 +111,11 @@ public class MergeHitData {
 		return true;
 	}
 	
-	private static void merge(String edaFilename, String lauFilename, String outputFilename, int numDocs,
+	private static void merge(String edaDocLabelFilename, String lauFilename, String outputFilename, int numDocs,
 			int comparisonsPerDoc, int chooseFromTopN, double traceProportion, TraceGenerator traceGen) throws Exception {
 		
-		Int2ObjectMap<String> sources = docSources(edaFilename);
-		Int2ObjectMap<String[]> edaLabels = docLabels(edaFilename);
+		Int2ObjectMap<String> sources = docSources(edaDocLabelFilename);
+		Int2ObjectMap<String[]> edaLabels = docLabels(edaDocLabelFilename);
 		Int2ObjectMap<String[]> lauLabels = docLabels(lauFilename);
 		
 		try(PrintStream w = new PrintStream(new FileOutputStream(outputFilename))) {
