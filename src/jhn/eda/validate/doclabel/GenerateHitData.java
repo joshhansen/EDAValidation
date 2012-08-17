@@ -127,10 +127,6 @@ public class GenerateHitData {
 					globalTopicNum = topicMapping.objectAtI(topicNum);
 					label = labels.lookupObject(globalTopicNum).toString();
 					
-	//				w.print(',');
-	//				w.print(topicNum);
-	//				w.print(',');
-	//				w.print(globalTopicNum);
 					w.print(",\"");
 					w.print(label);
 					w.print("\"");
