@@ -133,52 +133,10 @@ public class MergeHitData {
 				String[] lauLabelArr = lauLabels.get(docNum);
 				
 				for(int comparisonNum = 0; comparisonNum < comparisonsPerDoc; comparisonNum++) {
-					Models[] models = new Models[2];
-					
-					if(rand.nextDouble() <= traceProportion) {
-						models[0] = Models.TRACER;
-						if(rand.nextBoolean()) {
-							models[1] = Models.EDA;
-						} else {
-							models[1] = Models.LAU_ET_AL;
-						}
-					} else {
-						models[0] = Models.EDA;
-						models[1] = Models.LAU_ET_AL;
-					}
-					
-					String[] labels = new String[2];
-					for(int position = 0; position < labels.length; position++) {
-						switch(models[position]) {
-							case TRACER:
-								labels[position] = traceGen.generateTrace()[0];
-								break;
-							case EDA:
-								labels[position] = RandUtil.randItem(edaLabelArr, chooseFromTopN);
-								break;
-							case LAU_ET_AL:
-								labels[position] = RandUtil.randItem(lauLabelArr, chooseFromTopN);
-								break;
-							default:
-								throw new Exception();
-						}
-					}
-					
-					final boolean reverseOrder = rand.nextBoolean();
-					if(reverseOrder) {
-						Models tmp = models[0];
-						models[0] = models[1];
-						models[1] = tmp;
-						
-						String tmpLabels = labels[0];
-						labels[0] = labels[1];
-						labels[1] = tmpLabels;
-					}
-					
-					// Clean up
-					for(int k = 0; k < labels.length; k++) {
-						labels[k] = StringUtils.capitalize(labels[k].trim());
-					}
+					Models[] models = initModels(traceProportion);
+					String[] labels = initLabels(chooseFromTopN, traceGen, edaLabelArr,	lauLabelArr, models);
+					maybeReverseOrder(models, labels);
+					cleanLabels(labels);
 					
 					
 					w.append(models[0].toString()).append(',').append(models[1].toString());
@@ -198,6 +156,63 @@ public class MergeHitData {
 			}//end for docs
 			
 		}
+	}
+
+	private static void cleanLabels(String[] labels) {
+		// Clean up
+		for(int k = 0; k < labels.length; k++) {
+			labels[k] = StringUtils.capitalize(labels[k].trim());
+		}
+	}
+
+	private static void maybeReverseOrder(Models[] models, String[] labels) {
+		final boolean reverseOrder = RandUtil.rand.nextBoolean();
+		if(reverseOrder) {
+			Models tmp = models[0];
+			models[0] = models[1];
+			models[1] = tmp;
+			
+			String tmpLabels = labels[0];
+			labels[0] = labels[1];
+			labels[1] = tmpLabels;
+		}
+	}
+
+	private static String[] initLabels(int chooseFromTopN, TraceGenerator traceGen,
+			String[] edaLabelArr, String[] lauLabelArr, Models[] models) throws Exception {
+		String[] labels = new String[2];
+		for(int position = 0; position < labels.length; position++) {
+			switch(models[position]) {
+				case TRACER:
+					labels[position] = traceGen.generateTrace()[0];
+					break;
+				case EDA:
+					labels[position] = RandUtil.randItem(edaLabelArr, chooseFromTopN);
+					break;
+				case LAU_ET_AL:
+					labels[position] = RandUtil.randItem(lauLabelArr, chooseFromTopN);
+					break;
+				default:
+					throw new Exception();
+			}
+		}
+		return labels;
+	}
+
+	private static Models[] initModels(double traceProportion) {
+		Models[] models = new Models[2];
+		if(RandUtil.rand.nextDouble() <= traceProportion) {
+			models[0] = Models.TRACER;
+			if(RandUtil.rand.nextBoolean()) {
+				models[1] = Models.EDA;
+			} else {
+				models[1] = Models.LAU_ET_AL;
+			}
+		} else {
+			models[0] = Models.EDA;
+			models[1] = Models.LAU_ET_AL;
+		}
+		return models;
 	}
 	
 	public static void main(String[] args) throws Exception {
