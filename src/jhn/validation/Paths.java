@@ -6,9 +6,12 @@ public class Paths {
 	}
 	
 	
-//	/Projects/Output/LDA/results/reuters21578/hitcalibration
+	public static String topicCountCalibrationDir() {
+		return outputDir() + "/topic_count_calibration";
+	}
+	
 	public static String topicCountCalibrationDir(String dataset) {
-		return outputDir() + "/topic count calibration/" + dataset;
+		return topicCountCalibrationDir() + "/" + dataset;
 	}
 	
 //	public static String topicCountCalibrationFilename(int numTopics) {
