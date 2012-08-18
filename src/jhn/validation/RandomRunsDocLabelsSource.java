@@ -12,11 +12,11 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import jhn.util.FileExtensionFilter;
 import jhn.util.RandUtil;
 
-public class StandardDocLabelsSource extends AbstractDocLabelsSource {
+public class RandomRunsDocLabelsSource extends AbstractNamed implements DocLabelsSource {
 	private final String name;
 	private Int2ObjectMap<Map<String,String[]>> allLabels = new Int2ObjectOpenHashMap<>();
 	
-	public StandardDocLabelsSource(String name, String docLabelsDir) throws Exception {
+	public RandomRunsDocLabelsSource(String name, String docLabelsDir) throws Exception {
 		this.name = name;
 		
 		for(File f : new File(docLabelsDir).listFiles(new FileExtensionFilter(".doclabels"))) {

@@ -6,9 +6,10 @@ import java.util.List;
 import cc.mallet.types.LabelAlphabet;
 
 import jhn.util.RandUtil;
-import jhn.validation.AbstractDocLabelsSource;
+import jhn.validation.AbstractNamed;
+import jhn.validation.DocLabelsSource;
 
-public class RandomDocLabelsSource extends AbstractDocLabelsSource {
+public class RandomDocLabelsSource extends AbstractNamed implements DocLabelsSource {
 	private LabelAlphabet labels;
 	
 	public RandomDocLabelsSource(LabelAlphabet labels) {

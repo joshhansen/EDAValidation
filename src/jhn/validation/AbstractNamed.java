@@ -1,6 +1,6 @@
 package jhn.validation;
 
-public abstract class AbstractDocLabelsSource implements DocLabelsSource {
+public abstract class AbstractNamed implements Named {
 	@Override
 	public int hashCode() {
 		String name = name();
@@ -18,7 +18,7 @@ public abstract class AbstractDocLabelsSource implements DocLabelsSource {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AbstractDocLabelsSource other = (AbstractDocLabelsSource) obj;
+		AbstractNamed other = (AbstractNamed) obj;
 		if (name == null) {
 			if (other.name() != null)
 				return false;
