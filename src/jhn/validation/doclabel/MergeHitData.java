@@ -20,7 +20,7 @@ import jhn.idx.Index;
 import jhn.util.RandUtil;
 import jhn.util.Util;
 import jhn.validation.DocLabelsSource;
-import jhn.validation.StandardDocLabelsSource;
+import jhn.validation.RandomRunsDocLabelsSource;
 import jhn.validation.trace.RandomDocLabelsSource;
 
 
@@ -147,8 +147,8 @@ public class MergeHitData {
 		
 		final String edaLabelsDir = jhn.validation.Paths.topicCountCalibrationDir(datasetName) + "/eda_labels";
 		final String lauLabelsDir = jhn.validation.Paths.topicCountCalibrationDir(datasetName) + "/lau_labels";
-		DocLabelsSource eda = new StandardDocLabelsSource("EDA", edaLabelsDir);
-		DocLabelsSource lauEtAl = new StandardDocLabelsSource("LAU_ET_AL", lauLabelsDir);
+		DocLabelsSource eda = new RandomRunsDocLabelsSource("EDA", edaLabelsDir);
+		DocLabelsSource lauEtAl = new RandomRunsDocLabelsSource("LAU_ET_AL", lauLabelsDir);
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
