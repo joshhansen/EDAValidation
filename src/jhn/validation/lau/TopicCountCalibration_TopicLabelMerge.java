@@ -1,4 +1,4 @@
-package jhn.validation.doclabel;
+package jhn.validation.lau;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,12 +20,12 @@ import jhn.util.FileExtensionFilter;
 import jhn.util.RandUtil;
 import jhn.validation.Paths;
 
-public class TopicCountCalibration_Merge {
+public class TopicCountCalibration_TopicLabelMerge {
 	private final File srcDir;
 	private final String destFilename;
 	private final int comparisonsPerPair;
 	
-	public TopicCountCalibration_Merge(String srcDir, String destFilename, int comparisonsPerPair) {
+	public TopicCountCalibration_TopicLabelMerge(String srcDir, String destFilename, int comparisonsPerPair) {
 		this.srcDir = new File(srcDir);
 		this.destFilename = destFilename;
 		this.comparisonsPerPair = comparisonsPerPair;
@@ -141,7 +141,7 @@ public class TopicCountCalibration_Merge {
 	
 	public static void main(String[] args) throws Exception {
 		String datasetName = "reuters21578";
-		TopicCountCalibration_Merge tccm = new TopicCountCalibration_Merge(
+		TopicCountCalibration_TopicLabelMerge tccm = new TopicCountCalibration_TopicLabelMerge(
 				Paths.topicCountCalibrationDir(datasetName),
 				Paths.topicCountCalibrationDir(datasetName)+"/../" + datasetName + "_2.csv",
 				10);

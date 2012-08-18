@@ -1,4 +1,4 @@
-package jhn.validation.doclabel;
+package jhn.validation.lau;
 
 import java.io.File;
 
