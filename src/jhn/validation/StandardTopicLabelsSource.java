@@ -16,11 +16,13 @@ public class StandardTopicLabelsSource extends StandardNamed implements TopicLab
 		try(BufferedReader r = new BufferedReader(new FileReader(topicLabelsFilename))) {
 			String line = null;
 			while( (line=r.readLine()) != null) {
-				String[] parts = line.split(",");
-				int topicNum = Integer.parseInt(parts[0]);
-				String label = parts[parts.length-1];
-				label = label.substring(1, label.length()-1);
-				labels.put(topicNum, label);
+				if(!line.startsWith("#")) {
+					String[] parts = line.split(",");
+					int topicNum = Integer.parseInt(parts[0]);
+					String label = parts[parts.length-1];
+					label = label.substring(1, label.length()-1);
+					labels.put(topicNum, label);
+				}
 			}
 		}
 	}
