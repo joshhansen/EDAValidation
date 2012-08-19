@@ -1,4 +1,4 @@
-package jhn.validation.lau;
+package jhn.calibration.topiccount;
 
 import java.io.File;
 
@@ -24,11 +24,11 @@ import jhn.util.Log;
 import jhn.validation.Paths;
 
 
-public class TopicCountCalibration_RunLau implements AutoCloseable {
+public class RunLau implements AutoCloseable {
 	private final String dataset;
 	private LauEtAl lauEtAl;
 	
-	public TopicCountCalibration_RunLau(String dataset) {
+	public RunLau(String dataset) {
 		this.dataset = dataset;
 	}
 
@@ -49,9 +49,9 @@ public class TopicCountCalibration_RunLau implements AutoCloseable {
 		log.println("Lau, et al. configuration:");
 		log.println(conf);
 		
-		String wordIdxFilename = jhn.Paths.outputDir("JhnCommon") + "/word_sets/chunks/19.set";
-		String countsDbFilename = jhn.Paths.outputDir("JhnCommon") + "/counts/counts.sqlite3";
-		String cocountsDbFilename = jhn.Paths.outputDir("JhnCommon") + "/cocounts/cocounts.sqlite3";
+		String wordIdxFilename = jhn.Paths.wikipediaWordIndexFilename();
+		String countsDbFilename = jhn.Paths.wikipediaWordCountsDbFilename();
+		String cocountsDbFilename = jhn.Paths.wikipediaWordCocountsDbFilename();
 		AssociationMeasure<String,String> assocMeasure = new AverageWordWordPMI(wordIdxFilename, countsDbFilename, cocountsDbFilename);
 		
 		OrderedTitleSearcher ts1 = new MediawikiTitleSearcher(conf.getInt(Options.TITLE_SEARCHER_TOP_N));
@@ -66,7 +66,7 @@ public class TopicCountCalibration_RunLau implements AutoCloseable {
 
 	private void runLau(int numTopics, int run) throws Exception {
 		String keysFilename = Paths.topicCountCalibrationKeysFilename(dataset, numTopics, run);
-		String topicLabelsFilename = Paths.topicCountCalibrationLauLabelsFilename(dataset, numTopics, run);
+		String topicLabelsFilename = Paths.topicCountCalibrationLauTopicLabelsFilename(dataset, numTopics, run);
 		lauEtAl.labelAllTopics(keysFilename, topicLabelsFilename);
 	}
 	
@@ -84,7 +84,9 @@ public class TopicCountCalibration_RunLau implements AutoCloseable {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		try(TopicCountCalibration_RunLau tcc_rl = new TopicCountCalibration_RunLau("reuters21578")) {
+//		final String datasetName = "reuters21578";
+		final String datasetName = "state_of_the_union";
+		try(RunLau tcc_rl = new RunLau(datasetName)) {
 			tcc_rl.init();
 			tcc_rl.run();
 		}

@@ -1,9 +1,7 @@
-package jhn.validation.lau;
+package jhn.calibration.topiccount;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,35 +9,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-import jhn.util.FileExtensionFilter;
 import jhn.util.RandUtil;
 import jhn.validation.Paths;
+import jhn.validation.StandardTopicLabelsSource;
+import jhn.validation.TopicLabelsSource;
 
-public class TopicCountCalibration_TopicLabelMerge {
+public class TopicLabelMerge {
 	private final File srcDir;
 	private final String destFilename;
 	private final int comparisonsPerPair;
 	
-	public TopicCountCalibration_TopicLabelMerge(String srcDir, String destFilename, int comparisonsPerPair) {
+	public TopicLabelMerge(String srcDir, String destFilename, int comparisonsPerPair) {
 		this.srcDir = new File(srcDir);
 		this.destFilename = destFilename;
 		this.comparisonsPerPair = comparisonsPerPair;
 	}
 	
+	/** topicCount -> run -> label source */
 	private static class Labels {
-		private Int2ObjectMap<Int2ObjectMap<List<String>>> labels = new Int2ObjectOpenHashMap<>();
+		private Int2ObjectMap<Int2ObjectMap<TopicLabelsSource>> labels = new Int2ObjectOpenHashMap<>();
 		
-		public void addLabel(int topicCount, int run, String labelLine) {
-			getLabels(topicCount, run).add(labelLine);
+		public void setLabelSource(int topicCount, int run, TopicLabelsSource source) {
+			getLabels(topicCount).put(run, source);
 		}
 		
-		private Int2ObjectMap<List<String>> getLabels(int topicCount) {
-			Int2ObjectMap<List<String>> map = labels.get(topicCount);
+		private Int2ObjectMap<TopicLabelsSource> getLabels(int topicCount) {
+			Int2ObjectMap<TopicLabelsSource> map = labels.get(topicCount);
 			if(map==null) {
 				map = new Int2ObjectOpenHashMap<>();
 				labels.put(topicCount, map);
@@ -47,44 +46,39 @@ public class TopicCountCalibration_TopicLabelMerge {
 			return map;
 		}
 		
-		private List<String> getLabels(int topicCount, int run) {
-			Int2ObjectMap<List<String>> map = getLabels(topicCount);
-			List<String> list = map.get(run);
-			if(list == null) {
-				list = new ArrayList<>();
-				map.put(run, list);
-			}
-			return list;
+		private TopicLabelsSource getLabels(int topicCount, int run) {
+			return getLabels(topicCount).get(run);
 		}
 	}
-	
 
-	private static final Pattern rgx = Pattern.compile("lda(\\d+)topics_(\\d+)[.]lau_labels");
+	
 	public void run() throws FileNotFoundException, IOException {
 		
 		// Load label lines from disk
 		Labels labels = new Labels();
-		for(File file : srcDir.listFiles(new FileExtensionFilter("lau_labels"))) {
-			Matcher m = rgx.matcher(file.getName());
+		for(File file : srcDir.listFiles()) {
+			Matcher m = jhn.validation.Paths.NAME_RGX.matcher(file.getName().split("[.]")[0]);
 			m.matches();
 			int topicCount = Integer.parseInt(m.group(1));
 			int run = Integer.parseInt(m.group(2));
 			
-			try(BufferedReader r = new BufferedReader(new FileReader(file))) {
-				String line = null;
-				while( (line=r.readLine()) != null) {
-					labels.addLabel(topicCount, run, line);
-				}
-			}
+			labels.setLabelSource(topicCount, run, new StandardTopicLabelsSource(file.getName(), file.getPath()));
+			
+//			try(BufferedReader r = new BufferedReader(new FileReader(file))) {
+//				String line = null;
+//				while( (line=r.readLine()) != null) {
+//					labels.addLabel(topicCount, run, line);
+//				}
+//			}
 		}
 		
 		List<String> output = new ArrayList<>();
-		for(Int2ObjectMap.Entry<Int2ObjectMap<List<String>>> entry1 : labels.labels.int2ObjectEntrySet()) {
+		for(Int2ObjectMap.Entry<Int2ObjectMap<TopicLabelsSource>> entry1 : labels.labels.int2ObjectEntrySet()) {
 			
 			final int topicCount1 = entry1.getIntKey();
 			final int[] runs1 = entry1.getValue().keySet().toIntArray();
 			
-			for(Int2ObjectMap.Entry<Int2ObjectMap<List<String>>> entry2 : labels.labels.int2ObjectEntrySet()) {
+			for(Int2ObjectMap.Entry<Int2ObjectMap<TopicLabelsSource>> entry2 : labels.labels.int2ObjectEntrySet()) {
 				final int topicCount2 = entry2.getIntKey();
 				final int[] runs2 = entry2.getValue().keySet().toIntArray();
 				
@@ -93,8 +87,13 @@ public class TopicCountCalibration_TopicLabelMerge {
 						int run1 = RandUtil.randItem(runs1);
 						int run2 = RandUtil.randItem(runs2);
 						
-						String labelLine1 = RandUtil.randItem(labels.getLabels(topicCount1, run1));
-						String labelLine2 = RandUtil.randItem(labels.getLabels(topicCount2, run2));
+						int topicNum1 = RandUtil.rand.nextInt(topicCount1);
+						int topicNum2 = RandUtil.rand.nextInt(topicCount2);
+						
+//						String labelLine1 = RandUtil.randItem(labels.getLabels(topicCount1, run1));
+//						String labelLine2 = RandUtil.randItem(labels.getLabels(topicCount2, run2));
+						String labelLine1 = labels.getLabels(topicCount1, run1).labels(topicNum1, 1)[0];
+						String labelLine2 = labels.getLabels(topicCount2, run2).labels(topicNum2, 1)[0];
 						
 						StringBuilder outputLine = new StringBuilder();
 						outputLine.append(topicCount1).append(',').append(run1).append(',');
@@ -140,11 +139,12 @@ public class TopicCountCalibration_TopicLabelMerge {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		final int comparisonsPerPair = 10;
 		String datasetName = "reuters21578";
-		TopicCountCalibration_TopicLabelMerge tccm = new TopicCountCalibration_TopicLabelMerge(
-				Paths.topicCountCalibrationDir(datasetName),
-				Paths.topicCountCalibrationDir(datasetName)+"/../" + datasetName + "_2.csv",
-				10);
+		TopicLabelMerge tccm = new TopicLabelMerge(
+				Paths.topicCountCalibrationLauTopicLabelsDir(datasetName),
+				Paths.topicCountCalibrationMergedTopicLabelsFilename(datasetName),
+				comparisonsPerPair);
 		tccm.run();
 	}
 }
