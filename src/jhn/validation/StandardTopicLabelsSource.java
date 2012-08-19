@@ -8,6 +8,12 @@ import java.io.IOException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+/**
+ * Reads topic labels from a file. Format:
+ *     #comment
+ *     topicNum,word1,word2,...,wordN,"label"
+ * etc.
+ */
 public class StandardTopicLabelsSource extends StandardNamed implements TopicLabelsSource {
 
 	private Int2ObjectMap<String> labels = new Int2ObjectOpenHashMap<>();
