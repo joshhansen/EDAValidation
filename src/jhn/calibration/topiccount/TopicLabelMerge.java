@@ -15,8 +15,8 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import jhn.util.RandUtil;
 import jhn.validation.Paths;
-import jhn.validation.StandardTopicLabelsSource;
-import jhn.validation.TopicLabelsSource;
+import jhn.validation.StandardTopicLabelSource;
+import jhn.validation.TopicLabelSource;
 
 public class TopicLabelMerge {
 	private final File srcDir;
@@ -31,14 +31,14 @@ public class TopicLabelMerge {
 	
 	/** topicCount -> run -> label source */
 	private static class Labels {
-		private Int2ObjectMap<Int2ObjectMap<TopicLabelsSource>> labels = new Int2ObjectOpenHashMap<>();
+		private Int2ObjectMap<Int2ObjectMap<TopicLabelSource>> labels = new Int2ObjectOpenHashMap<>();
 		
-		public void setLabelSource(int topicCount, int run, TopicLabelsSource source) {
+		public void setLabelSource(int topicCount, int run, TopicLabelSource source) {
 			getLabels(topicCount).put(run, source);
 		}
 		
-		private Int2ObjectMap<TopicLabelsSource> getLabels(int topicCount) {
-			Int2ObjectMap<TopicLabelsSource> map = labels.get(topicCount);
+		private Int2ObjectMap<TopicLabelSource> getLabels(int topicCount) {
+			Int2ObjectMap<TopicLabelSource> map = labels.get(topicCount);
 			if(map==null) {
 				map = new Int2ObjectOpenHashMap<>();
 				labels.put(topicCount, map);
@@ -46,7 +46,7 @@ public class TopicLabelMerge {
 			return map;
 		}
 		
-		private TopicLabelsSource getLabels(int topicCount, int run) {
+		private TopicLabelSource getLabels(int topicCount, int run) {
 			return getLabels(topicCount).get(run);
 		}
 	}
@@ -62,7 +62,7 @@ public class TopicLabelMerge {
 			int topicCount = Integer.parseInt(m.group(1));
 			int run = Integer.parseInt(m.group(2));
 			
-			labels.setLabelSource(topicCount, run, new StandardTopicLabelsSource(file.getName(), file.getPath()));
+			labels.setLabelSource(topicCount, run, new StandardTopicLabelSource(file.getName(), file.getPath()));
 			
 //			try(BufferedReader r = new BufferedReader(new FileReader(file))) {
 //				String line = null;
@@ -73,12 +73,12 @@ public class TopicLabelMerge {
 		}
 		
 		List<String> output = new ArrayList<>();
-		for(Int2ObjectMap.Entry<Int2ObjectMap<TopicLabelsSource>> entry1 : labels.labels.int2ObjectEntrySet()) {
+		for(Int2ObjectMap.Entry<Int2ObjectMap<TopicLabelSource>> entry1 : labels.labels.int2ObjectEntrySet()) {
 			
 			final int topicCount1 = entry1.getIntKey();
 			final int[] runs1 = entry1.getValue().keySet().toIntArray();
 			
-			for(Int2ObjectMap.Entry<Int2ObjectMap<TopicLabelsSource>> entry2 : labels.labels.int2ObjectEntrySet()) {
+			for(Int2ObjectMap.Entry<Int2ObjectMap<TopicLabelSource>> entry2 : labels.labels.int2ObjectEntrySet()) {
 				final int topicCount2 = entry2.getIntKey();
 				final int[] runs2 = entry2.getValue().keySet().toIntArray();
 				

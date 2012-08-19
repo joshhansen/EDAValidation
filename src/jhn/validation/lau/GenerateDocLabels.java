@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Matcher;
 
-import jhn.validation.StandardTopicLabelsSource;
-import jhn.validation.TopicLabelsSource;
+import jhn.validation.StandardTopicLabelSource;
+import jhn.validation.TopicLabelSource;
 
 /**
  * Given doc-topic counts and topic labels, generate document labels
@@ -28,7 +28,7 @@ public class GenerateDocLabels {
 			String topicLabelsFilename = jhn.validation.Paths.topicCountCalibrationLauTopicLabelsFilename(datasetName, topicCount, run);
 
 			
-			TopicLabelsSource tls = new StandardTopicLabelsSource(null, topicLabelsFilename);
+			TopicLabelSource tls = new StandardTopicLabelSource(null, topicLabelsFilename);
 			
 //			String outputFilename = outputDir + "/" + name + jhn.validation.Paths. ".doc_labels";
 			String outputFilename = jhn.validation.Paths.topicCountCalibrationLauDocLabelsFilename(datasetName, topicCount, run);

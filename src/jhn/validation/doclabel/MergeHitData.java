@@ -19,14 +19,14 @@ import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.idx.Index;
 import jhn.util.RandUtil;
 import jhn.util.Util;
-import jhn.validation.DocLabelsSource;
-import jhn.validation.RandomRunsDocLabelsSource;
+import jhn.validation.DocLabelSource;
+import jhn.validation.RandomRunsDocLabelSource;
 import jhn.validation.trace.RandomDocLabelsSource;
 
 
 
 public class MergeHitData {
-	private DoubleCounter<DocLabelsSource> modelProportions = new ObjDoubleCounter<>();
+	private DoubleCounter<DocLabelSource> modelProportions = new ObjDoubleCounter<>();
 
 	private static String loadDocument(String filename) throws Exception {
 		StringBuilder doc = new StringBuilder();
@@ -89,7 +89,7 @@ public class MergeHitData {
 				} while(!docOK(text));
 				
 				for(int comparisonNum = 0; comparisonNum < comparisonsPerDoc; comparisonNum++) {
-					DocLabelsSource[] models = initModels();
+					DocLabelSource[] models = initModels();
 					String[] labels = initLabels(models, filename, labelsPerDoc, chooseFromTopN);
 					cleanLabels(labels);
 					
@@ -116,7 +116,7 @@ public class MergeHitData {
 		}
 	}
 
-	private static String[] initLabels(DocLabelsSource[] models, String docFilename, int labelsPerDoc, int chooseFromTopN) throws Exception {
+	private static String[] initLabels(DocLabelSource[] models, String docFilename, int labelsPerDoc, int chooseFromTopN) throws Exception {
 		String[] labels = new String[2];
 		for(int position = 0; position < labels.length; position++) {
 			labels[position] = RandUtil.randItem(models[position].labels(docFilename, labelsPerDoc), chooseFromTopN);
@@ -124,12 +124,12 @@ public class MergeHitData {
 		return labels;
 	}
 
-	private DocLabelsSource randModel() {
+	private DocLabelSource randModel() {
 		return modelProportions.sample();
 	}
 	
-	private DocLabelsSource[] initModels() {
-		DocLabelsSource[] models = new DocLabelsSource[2];
+	private DocLabelSource[] initModels() {
+		DocLabelSource[] models = new DocLabelSource[2];
 		models[0] = randModel();
 		do {
 			models[1] = randModel();
@@ -147,14 +147,14 @@ public class MergeHitData {
 		
 		final String edaLabelsDir = jhn.validation.Paths.topicCountCalibrationDir(datasetName) + "/eda_labels";
 		final String lauLabelsDir = jhn.validation.Paths.topicCountCalibrationDir(datasetName) + "/lau_labels";
-		DocLabelsSource eda = new RandomRunsDocLabelsSource("EDA", edaLabelsDir);
-		DocLabelsSource lauEtAl = new RandomRunsDocLabelsSource("LAU_ET_AL", lauLabelsDir);
+		DocLabelSource eda = new RandomRunsDocLabelSource("EDA", edaLabelsDir);
+		DocLabelSource lauEtAl = new RandomRunsDocLabelSource("LAU_ET_AL", lauLabelsDir);
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
 			
 			
-			DocLabelsSource rand = new RandomDocLabelsSource(labels);
+			DocLabelSource rand = new RandomDocLabelsSource(labels);
 			
 			MergeHitData mhd = new MergeHitData();
 			mhd.modelProportions.set(eda, 0.45);

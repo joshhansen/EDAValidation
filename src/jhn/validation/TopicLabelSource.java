@@ -1,5 +1,5 @@
 package jhn.validation;
 
-public interface TopicLabelsSource extends Named {
+public interface TopicLabelSource extends Named {
 	String[] labels(int topicNum, int numlabels);
 }

@@ -7,9 +7,9 @@ import cc.mallet.types.LabelAlphabet;
 
 import jhn.util.RandUtil;
 import jhn.validation.AbstractNamed;
-import jhn.validation.DocLabelsSource;
+import jhn.validation.DocLabelSource;
 
-public class RandomDocLabelsSource extends AbstractNamed implements DocLabelsSource {
+public class RandomDocLabelsSource extends AbstractNamed implements DocLabelSource {
 	private LabelAlphabet labels;
 	
 	public RandomDocLabelsSource(LabelAlphabet labels) {

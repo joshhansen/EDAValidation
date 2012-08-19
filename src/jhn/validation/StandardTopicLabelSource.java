@@ -14,10 +14,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
  *     topicNum,word1,word2,...,wordN,"label"
  * etc.
  */
-public class StandardTopicLabelsSource extends StandardNamed implements TopicLabelsSource {
+public class StandardTopicLabelSource extends StandardNamed implements TopicLabelSource {
 
 	private Int2ObjectMap<String> labels = new Int2ObjectOpenHashMap<>();
-	public StandardTopicLabelsSource(String name, String topicLabelsFilename) throws FileNotFoundException, IOException {
+	public StandardTopicLabelSource(String name, String topicLabelsFilename) throws FileNotFoundException, IOException {
 		super(name);
 		try(BufferedReader r = new BufferedReader(new FileReader(topicLabelsFilename))) {
 			String line = null;
