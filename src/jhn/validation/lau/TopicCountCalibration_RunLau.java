@@ -39,7 +39,6 @@ public class TopicCountCalibration_RunLau implements AutoCloseable {
 		final String artCatsDir = jhn.eda.Paths.indexDir("article_categories");
 		
 		Config conf = new Config();
-		conf.putInt(Options.PROP_PMI_MAX_HITS, 1000);
 		conf.putInt(Options.TITLE_SEARCHER_TOP_N, 10);
 		conf.putDouble(Options.MIN_AVG_RACO, 0.1);
 		conf.putInt(Options.NUM_FALLBACK_CANDIDATES, 5);
