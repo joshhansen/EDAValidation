@@ -6,20 +6,32 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
 
-import jhn.util.FileExtensionFilter;
 import jhn.validation.StandardTopicLabelsSource;
 import jhn.validation.TopicLabelsSource;
 
+/**
+ * Given doc-topic counts and topic labels, generate document labels
+ *
+ */
 public class GenerateDocLabels {
-	public static void generate(String docTopicsDir, String topicLabelsDir, String outputDir) throws FileNotFoundException, IOException {
-		for(File docTopicsFile : new File(docTopicsDir).listFiles(new FileExtensionFilter(".doctopics"))) {
+	public static void generate(String datasetName, String docTopicsDir) throws FileNotFoundException, IOException {
+		for(File docTopicsFile : new File(docTopicsDir).listFiles()) {
 			String name = docTopicsFile.getName().split("[.]")[0];
-			String topicLabelsFilename = topicLabelsDir + "/" + name + ".topic_labels";
+			Matcher m = jhn.validation.Paths.NAME_RGX.matcher(name);
+			m.matches();
+			int topicCount = Integer.parseInt(m.group(1));
+			int run = Integer.parseInt(m.group(2));
+			
+			//topicLabelsDir + "/" + name + jhn.validation.Paths.TOPIC_LABELS_EXT;
+			String topicLabelsFilename = jhn.validation.Paths.topicCountCalibrationLauTopicLabelsFilename(datasetName, topicCount, run);
+
 			
 			TopicLabelsSource tls = new StandardTopicLabelsSource(null, topicLabelsFilename);
 			
-			String outputFilename = outputDir + "/" + name + ".doc_labels";
+//			String outputFilename = outputDir + "/" + name + jhn.validation.Paths. ".doc_labels";
+			String outputFilename = jhn.validation.Paths.topicCountCalibrationLauDocLabelsFilename(datasetName, topicCount, run);
 			
 			try(BufferedReader r = new BufferedReader(new FileReader(docTopicsFile));
 					PrintWriter w = new PrintWriter(outputFilename)) {
@@ -51,9 +63,7 @@ public class GenerateDocLabels {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		String datasetName = "reuters21578_noblah";
-		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationDir(datasetName);
-		String topicLabelsDir = jhn.validation.Paths.topicCountCalibrationDir() + "/lau_topic_labels";
-		String outputDir = jhn.validation.Paths.topicCountCalibrationDir() + "/lau_doc_labels";
-		generate(docTopicsDir, topicLabelsDir, outputDir);
+		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationDocTopicsDir(datasetName);
+		generate(datasetName, docTopicsDir);
 	}
 }
