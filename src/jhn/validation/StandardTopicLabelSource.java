@@ -34,6 +34,11 @@ public class StandardTopicLabelSource extends StandardNamed implements TopicLabe
 	}
 
 	@Override
+	public String[] labels(Integer topicNum, int numLabels) {
+		return labels(topicNum.intValue(), numLabels);
+	}
+
+	@Override
 	public String[] labels(int topicNum, int numLabels) {
 		if(numLabels > 1) throw new IllegalArgumentException("Only one label at a time for now");
 		
