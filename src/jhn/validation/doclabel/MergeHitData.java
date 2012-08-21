@@ -145,15 +145,13 @@ public class MergeHitData {
 		final int cmpsPerDoc = 1;
 		final int chooseFromTopN = 1;
 		
-		final String edaLabelsDir = jhn.validation.Paths.topicCountCalibrationDir(datasetName) + "/eda_labels";
-		final String lauLabelsDir = jhn.validation.Paths.topicCountCalibrationDir(datasetName) + "/lau_labels";
+		final String edaLabelsDir = jhn.validation.Paths.topicCountCalibrationEdaDocLabelsDir(datasetName);
+		final String lauLabelsDir = jhn.validation.Paths.topicCountCalibrationLauDocLabelsDir(datasetName);
 		DocLabelSource eda = new RandomRunsDocLabelSource("EDA", edaLabelsDir);
 		DocLabelSource lauEtAl = new RandomRunsDocLabelSource("LAU_ET_AL", lauLabelsDir);
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
-			
-			
 			DocLabelSource rand = new RandomDocLabelsSource(labels);
 			
 			MergeHitData mhd = new MergeHitData();

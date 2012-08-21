@@ -111,7 +111,6 @@ public class TopicLabelMerge {
 			for(String side : sides) {
 				w.append("topicCount").append(side).append(',');
 				w.append("run").append(side).append(',');
-				
 			}
 			
 			for(int i = 0; i < sides.length; i++) {
@@ -143,7 +142,7 @@ public class TopicLabelMerge {
 		String datasetName = "reuters21578";
 		TopicLabelMerge tccm = new TopicLabelMerge(
 				Paths.topicCountCalibrationLauTopicLabelsDir(datasetName),
-				Paths.topicCountCalibrationMergedTopicLabelsFilename(datasetName),
+				Paths.topicCountCalibrationMergedLauTopicLabelsFilename(datasetName),
 				comparisonsPerPair);
 		tccm.run();
 	}
