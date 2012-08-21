@@ -63,13 +63,6 @@ public class TopicLabelMerge {
 			int run = Integer.parseInt(m.group(2));
 			
 			labels.setLabelSource(topicCount, run, new StandardTopicLabelSource(file.getName(), file.getPath()));
-			
-//			try(BufferedReader r = new BufferedReader(new FileReader(file))) {
-//				String line = null;
-//				while( (line=r.readLine()) != null) {
-//					labels.addLabel(topicCount, run, line);
-//				}
-//			}
 		}
 		
 		List<String> output = new ArrayList<>();
@@ -90,8 +83,6 @@ public class TopicLabelMerge {
 						int topicNum1 = RandUtil.rand.nextInt(topicCount1);
 						int topicNum2 = RandUtil.rand.nextInt(topicCount2);
 						
-//						String labelLine1 = RandUtil.randItem(labels.getLabels(topicCount1, run1));
-//						String labelLine2 = RandUtil.randItem(labels.getLabels(topicCount2, run2));
 						String labelLine1 = labels.getLabels(topicCount1, run1).labels(topicNum1, 1)[0];
 						String labelLine2 = labels.getLabels(topicCount2, run2).labels(topicNum2, 1)[0];
 						

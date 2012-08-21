@@ -159,7 +159,6 @@ public class MergeHitData {
 			mhd.modelProportions.set(lauEtAl, 0.45);
 			mhd.modelProportions.set(rand, 0.1);
 			
-//			String edaDocLabelFilename = jhn.eda.Paths.documentLabelHitDataFilename(edaRunDir, edaIt);
 			final String outputFilename = jhn.Paths.outputDir("EDAValidation")
 				+ "/merged_document_labels"
 				+ "_" + datasetName

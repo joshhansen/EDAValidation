@@ -24,13 +24,11 @@ public class GenerateDocLabels {
 			int topicCount = Integer.parseInt(m.group(1));
 			int run = Integer.parseInt(m.group(2));
 			
-			//topicLabelsDir + "/" + name + jhn.validation.Paths.TOPIC_LABELS_EXT;
 			String topicLabelsFilename = jhn.validation.Paths.topicCountCalibrationLauTopicLabelsFilename(datasetName, topicCount, run);
 
 			
 			TopicLabelSource tls = new StandardTopicLabelSource(null, topicLabelsFilename);
 			
-//			String outputFilename = outputDir + "/" + name + jhn.validation.Paths. ".doc_labels";
 			String outputFilename = jhn.validation.Paths.topicCountCalibrationLauDocLabelsFilename(datasetName, topicCount, run);
 			
 			try(BufferedReader r = new BufferedReader(new FileReader(docTopicsFile));
