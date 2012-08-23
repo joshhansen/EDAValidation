@@ -61,7 +61,8 @@ public class GenerateDocLabels {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		String datasetName = "reuters21578_noblah";
-		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationDocTopicsDir(datasetName);
+//		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationDocTopicsDir(datasetName);
+		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationLauDocLabelsDir(datasetName);
 		generate(datasetName, docTopicsDir);
 	}
 }

@@ -33,10 +33,10 @@ public class RunLau implements AutoCloseable {
 	}
 
 	public void init() throws Exception {
-		IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(jhn.eda.Paths.topicWordIndexDir("wp_lucene4"))));
+		IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(jhn.Paths.topicWordIndexDir("wp_lucene4"))));
 		IndexReader titleIdx = IndexReader.open(FSDirectory.open(new File(jhn.Paths.titleIndexDir())));
-		final String linksDir = jhn.eda.Paths.indexDir("page_links");
-		final String artCatsDir = jhn.eda.Paths.indexDir("article_categories");
+		final String linksDir = jhn.Paths.indexDir("page_links");
+		final String artCatsDir = jhn.Paths.indexDir("article_categories");
 		
 		Config conf = new Config();
 		conf.putInt(Options.TITLE_SEARCHER_TOP_N, 10);

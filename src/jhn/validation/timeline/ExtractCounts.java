@@ -25,7 +25,7 @@ public class ExtractCounts implements AutoCloseable {
 
 	public ExtractCounts(String topicWordIdxName) throws Exception {
 		this.topicWordIdxName = topicWordIdxName;
-		String topicWordIdxLuceneDir = Paths.topicWordIndexDir(topicWordIdxName);
+		String topicWordIdxLuceneDir = jhn.Paths.topicWordIndexDir(topicWordIdxName);
 		topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxLuceneDir)));
 		srcTopicCounts = new LuceneTopicCounts(topicWordIdx);
 	}

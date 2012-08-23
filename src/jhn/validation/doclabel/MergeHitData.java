@@ -139,7 +139,7 @@ public class MergeHitData {
 	
 	public static void main(String[] args) throws Exception {
 		final String datasetName = "toy_dataset4";
-		String topicWordIdxDir = jhn.eda.Paths.topicWordIndexDir("wp_lucene4");
+		String topicWordIdxDir = jhn.Paths.topicWordIndexDir("wp_lucene4");
 		final int numDocs = 100;
 		final int labelsPerDoc = 10;
 		final int cmpsPerDoc = 1;
