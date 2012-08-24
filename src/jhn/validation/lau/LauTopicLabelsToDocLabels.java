@@ -15,7 +15,7 @@ import jhn.validation.TopicLabelSource;
  * Given doc-topic counts and topic labels, generate document labels
  *
  */
-public class GenerateDocLabels {
+public class LauTopicLabelsToDocLabels {
 	public static void generate(String datasetName, String docTopicsDir) throws FileNotFoundException, IOException {
 		for(File docTopicsFile : new File(docTopicsDir).listFiles()) {
 			String name = docTopicsFile.getName().split("[.]")[0];
