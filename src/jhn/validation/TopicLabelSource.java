@@ -1,6 +1,6 @@
 package jhn.validation;
 
-public interface TopicLabelSource extends LabelSource<Integer>, Named {
+public interface TopicLabelSource extends LabelSource<Integer> {
 //	@Override
 //	String[] labels(Integer topicNum, int numlabels);
 	

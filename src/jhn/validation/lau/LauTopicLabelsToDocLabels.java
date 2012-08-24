@@ -27,7 +27,7 @@ public class GenerateDocLabels {
 			String topicLabelsFilename = jhn.validation.Paths.topicCountCalibrationLauTopicLabelsFilename(datasetName, topicCount, run);
 
 			
-			TopicLabelSource tls = new StandardTopicLabelSource(null, topicLabelsFilename);
+			TopicLabelSource tls = new StandardTopicLabelSource(topicLabelsFilename);
 			
 			String outputFilename = jhn.validation.Paths.topicCountCalibrationLauDocLabelsFilename(datasetName, topicCount, run);
 			

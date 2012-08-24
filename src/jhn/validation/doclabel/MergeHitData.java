@@ -13,6 +13,9 @@ import org.apache.lucene.store.FSDirectory;
 
 import cc.mallet.types.LabelAlphabet;
 
+import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+
 import jhn.counts.d.DoubleCounter;
 import jhn.counts.d.o.ObjDoubleCounter;
 import jhn.eda.lucene.LuceneLabelAlphabet;
@@ -26,6 +29,7 @@ import jhn.validation.trace.RandomDocLabelsSource;
 
 
 public class MergeHitData {
+	private Reference2ObjectMap<DocLabelSource,String> modelNames = new Reference2ObjectOpenHashMap<>();
 	private DoubleCounter<DocLabelSource> modelProportions = new ObjDoubleCounter<>();
 
 	private static String loadDocument(String filename) throws Exception {
@@ -93,7 +97,7 @@ public class MergeHitData {
 					String[] labels = initLabels(models, filename, labelsPerDoc, chooseFromTopN);
 					cleanLabels(labels);
 					
-					w.append(models[0].toString()).append(',').append(models[1].toString());
+					w.append(modelNames.get(models[0])).append(',').append(modelNames.get(models[1]));
 					w.print(',');
 					w.print(docNum);
 					w.append(",\"").append(text).append("\"");
@@ -147,8 +151,8 @@ public class MergeHitData {
 		
 		final String edaLabelsDir = jhn.validation.Paths.topicCountCalibrationEdaDocLabelsDir(datasetName);
 		final String lauLabelsDir = jhn.validation.Paths.topicCountCalibrationLauDocLabelsDir(datasetName);
-		DocLabelSource eda = new RandomRunsDocLabelSource("EDA", edaLabelsDir);
-		DocLabelSource lauEtAl = new RandomRunsDocLabelSource("LAU_ET_AL", lauLabelsDir);
+		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir);
+		DocLabelSource lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir);
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
@@ -158,6 +162,10 @@ public class MergeHitData {
 			mhd.modelProportions.set(eda, 0.45);
 			mhd.modelProportions.set(lauEtAl, 0.45);
 			mhd.modelProportions.set(rand, 0.1);
+			
+			mhd.modelNames.put(eda, "EDA");
+			mhd.modelNames.put(lauEtAl, "LAU_ET_AL");
+			mhd.modelNames.put(rand, "RANDOM");
 			
 			final String outputFilename = jhn.Paths.outputDir("EDAValidation")
 				+ "/merged_document_labels"

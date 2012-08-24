@@ -6,7 +6,6 @@ import java.util.List;
 import cc.mallet.types.LabelAlphabet;
 
 import jhn.util.RandUtil;
-import jhn.validation.AbstractNamed;
 import jhn.validation.DocLabelSource;
 
 public class RandomDocLabelsSource extends AbstractNamed implements DocLabelSource {
@@ -28,10 +27,5 @@ public class RandomDocLabelsSource extends AbstractNamed implements DocLabelSour
 		}
 		
 		return traceParts.toArray(new String[0]);
-	}
-
-	@Override
-	public String name() {
-		return "RANDOM";
 	}
 }
