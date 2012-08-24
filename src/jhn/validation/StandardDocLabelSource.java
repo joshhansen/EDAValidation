@@ -16,13 +16,14 @@ import jhn.util.RandUtil;
  */
 public class StandardDocLabelSource implements DocLabelSource, BareLabelSource {
 	private Map<String,String[]> labels = new HashMap<>();
-		
+	public StandardDocLabelSource(String srcFilename) throws IOException {
 		try(BufferedReader r = new BufferedReader(new FileReader(srcFilename))) {
 			String line;
 			while( (line=r.readLine()) != null) {
 				if(!line.startsWith("#")) {
 					String[] parts = line.split(",");
-					String filename = parts[0];
+					String[] fileParts = parts[1].split("/");
+					String filename = fileParts[fileParts.length-1];
 					String[] labelsArr = new String[parts.length - 2];
 					for(int i = 2; i < parts.length; i++) {
 						labelsArr[i-2] = parts[i];
