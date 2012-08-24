@@ -36,7 +36,7 @@ public class StandardDocLabelSource implements DocLabelSource, BareLabelSource {
 	@Override
 	public String[] labels(String docFilename, int numLabels) {
 		String[] labelsArr = labels.get(docFilename);
-		if(labelsArr.length > numLabels) {
+		if(labelsArr.length < numLabels) {
 			throw new IllegalArgumentException("Can't return that many labels");
 		}
 		return labelsArr;
