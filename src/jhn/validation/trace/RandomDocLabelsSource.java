@@ -27,7 +27,6 @@ public class RandomDocLabelsSource extends AbstractNamed implements DocLabelSour
 		for(int i = 0; i < numLabels; i++) {
 			int labelNum = RandUtil.rand.nextInt(labels.size());
 			String label = labels.lookupObject(labelNum).toString();
-//				trace.append(",\"").append(label).append("\"");
 			traceParts.add(label);
 		}
 		
