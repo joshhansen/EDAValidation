@@ -8,6 +8,11 @@ import cc.mallet.types.LabelAlphabet;
 import jhn.util.RandUtil;
 import jhn.validation.DocLabelSource;
 
+/**
+ * A document label source that returns labels selected at random from a LabelAlphabet
+ * @author Josh Hansen
+ *
+ */
 public class RandomDocLabelsSource extends AbstractNamed implements DocLabelSource {
 	private LabelAlphabet labels;
 	
