@@ -136,14 +136,4 @@ public class CalibrationMerge<T> {
 			}
 		}
 	}
-	
-	public static void main(String[] args) throws Exception {
-		final int comparisonsPerPair = 10;
-		String datasetName = "reuters21578";
-		CalibrationMerge tccm = new CalibrationMerge(
-				Paths.topicCountCalibrationLauTopicLabelsDir(datasetName),
-				Paths.topicCountCalibrationMergedTopicLabelsFilename(datasetName),
-				comparisonsPerPair);
-		tccm.run();
-	}
 }
