@@ -8,17 +8,18 @@ import java.io.IOException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+import jhn.util.RandUtil;
+
 /**
  * Reads topic labels from a file. Format:
  *     #comment
  *     topicNum,word1,word2,...,wordN,"label"
  * etc.
  */
-public class StandardTopicLabelSource extends StandardNamed implements TopicLabelSource {
+public class StandardTopicLabelSource implements TopicLabelSource, BareLabelSource {
 
 	private Int2ObjectMap<String> labels = new Int2ObjectOpenHashMap<>();
-	public StandardTopicLabelSource(String name, String topicLabelsFilename) throws FileNotFoundException, IOException {
-		super(name);
+	public StandardTopicLabelSource(String topicLabelsFilename) throws FileNotFoundException, IOException {
 		try(BufferedReader r = new BufferedReader(new FileReader(topicLabelsFilename))) {
 			String line = null;
 			while( (line=r.readLine()) != null) {
@@ -43,6 +44,11 @@ public class StandardTopicLabelSource extends StandardNamed implements TopicLabe
 		if(numLabels > 1) throw new IllegalArgumentException("Only one label at a time for now");
 		
 		return new String[]{ labels.get(topicNum) };
+	}
+
+	@Override
+	public String[] labels(int numLabels) {
+		return labels(RandUtil.randItem(labels.keySet()), numLabels);
 	}
 
 }

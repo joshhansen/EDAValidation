@@ -6,16 +6,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import jhn.util.RandUtil;
+
 /**
  * Format:
  *     #comment
  *     docNum,filename,label1,label2,...,labelN
  *
  */
-public class StandardDocLabelSource extends StandardNamed implements DocLabelSource {
+public class StandardDocLabelSource implements DocLabelSource, BareLabelSource {
 	private Map<String,String[]> labels = new HashMap<>();
-	public StandardDocLabelSource(String name, String srcFilename) throws IOException {
-		super(name);
 		
 		try(BufferedReader r = new BufferedReader(new FileReader(srcFilename))) {
 			String line;
@@ -40,5 +40,10 @@ public class StandardDocLabelSource extends StandardNamed implements DocLabelSou
 			throw new IllegalArgumentException("Can't return that many labels");
 		}
 		return labelsArr;
+	}
+
+	@Override
+	public String[] labels(int numLabels) {
+		return labels(RandUtil.randItem(labels.keySet()), numLabels);
 	}
 }

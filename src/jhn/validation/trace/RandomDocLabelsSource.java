@@ -6,6 +6,7 @@ import java.util.List;
 import cc.mallet.types.LabelAlphabet;
 
 import jhn.util.RandUtil;
+import jhn.validation.BareLabelSource;
 import jhn.validation.DocLabelSource;
 
 /**
@@ -13,15 +14,20 @@ import jhn.validation.DocLabelSource;
  * @author Josh Hansen
  *
  */
-public class RandomDocLabelsSource extends AbstractNamed implements DocLabelSource {
+public class RandomDocLabelsSource implements DocLabelSource, BareLabelSource {
 	private LabelAlphabet labels;
 	
 	public RandomDocLabelsSource(LabelAlphabet labels) {
 		this.labels = labels;
 	}
-
+	
 	@Override
 	public String[] labels(String docFilename, int numLabels) {
+		return labels(numLabels);
+	}
+	
+	@Override
+	public String[] labels(int numLabels) {
 		List<String> traceParts = new ArrayList<>();
 		
 		for(int i = 0; i < numLabels; i++) {
