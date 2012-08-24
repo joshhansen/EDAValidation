@@ -61,8 +61,7 @@ public class LauTopicLabelsToDocLabels {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		String datasetName = "reuters21578_noblah";
-//		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationDocTopicsDir(datasetName);
-		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationLauDocLabelsDir(datasetName);
+		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationDocTopicsDir(datasetName);
 		generate(datasetName, docTopicsDir);
 	}
 }
