@@ -7,45 +7,46 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-import jhn.util.DefaultMap;
-import jhn.util.Factory;
 import jhn.util.RandUtil;
-import jhn.validation.BareLabelSource;
 import jhn.validation.LabelSource;
-import jhn.validation.Paths;
-import jhn.validation.StandardTopicLabelSource;
-import jhn.validation.TopicLabelSource;
 
-public class CalibrationMerge<T> {
+/**
+ * 
+ * @author Josh Hansen
+ *
+ * @param <K> The type of key the labels are indexed by
+ */
+public class CalibrationMerge<K> {
 	private final File srcDir;
 	private final String destFilename;
 	private final int comparisonsPerPair;
-	private final LabelSourceFactory labelSrcFact;
-	public CalibrationMerge(String srcDir, String destFilename, int comparisonsPerPair, LabelSourceFactory labelSrcFact) {
+	private final LabelSourceFactory<K> labelSrcFact;
+	private final KeySource<K> keySource;
+	public CalibrationMerge(String srcDir, String destFilename, int comparisonsPerPair,
+			LabelSourceFactory<K> labelSrcFact, KeySource<K> keySource) {
 		this.srcDir = new File(srcDir);
 		this.destFilename = destFilename;
 		this.comparisonsPerPair = comparisonsPerPair;
 		this.labelSrcFact = labelSrcFact;
+		this.keySource = keySource;
 	}
 	
 	/** topicCount -> run -> label source */
 	private class Labels {
-		private Int2ObjectMap<Int2ObjectMap<BareLabelSource>> labels = new Int2ObjectOpenHashMap<>();
+		private Int2ObjectMap<Int2ObjectMap<LabelSource<K>>> labels = new Int2ObjectOpenHashMap<>();
 		
-		public void setLabelSource(int topicCount, int run, BareLabelSource source) {
+		public void setLabelSource(int topicCount, int run, LabelSource<K> source) {
 			getLabels(topicCount).put(run, source);
 		}
 		
-		private Int2ObjectMap<BareLabelSource> getLabels(int topicCount) {
-			Int2ObjectMap<BareLabelSource> map = labels.get(topicCount);
+		private Int2ObjectMap<LabelSource<K>> getLabels(int topicCount) {
+			Int2ObjectMap<LabelSource<K>> map = labels.get(topicCount);
 			if(map==null) {
 				map = new Int2ObjectOpenHashMap<>();
 				labels.put(topicCount, map);
@@ -53,15 +54,18 @@ public class CalibrationMerge<T> {
 			return map;
 		}
 		
-		private BareLabelSource getLabels(int topicCount, int run) {
+		private LabelSource<K> getLabels(int topicCount, int run) {
 			return getLabels(topicCount).get(run);
 		}
 	}
 
-	public interface LabelSourceFactory {
-		BareLabelSource create(File file);
+	public interface LabelSourceFactory<Key> {
+		LabelSource<Key> create(File file) throws Exception;
 	}
 	
+	public interface KeySource<Key> {
+		Key randomKey();
+	}
 	
 	
 	public void run() throws FileNotFoundException, IOException {
@@ -78,27 +82,30 @@ public class CalibrationMerge<T> {
 		}
 		
 		List<String> output = new ArrayList<>();
-		for(Int2ObjectMap.Entry<Int2ObjectMap<BareLabelSource>> entry1 : labels.labels.int2ObjectEntrySet()) {
+		for(Int2ObjectMap.Entry<Int2ObjectMap<LabelSource<K>>> entry1 : labels.labels.int2ObjectEntrySet()) {
 			
 			final int topicCount1 = entry1.getIntKey();
 			final int[] runs1 = entry1.getValue().keySet().toIntArray();
 			
-			for(Int2ObjectMap.Entry<Int2ObjectMap<BareLabelSource>> entry2 : labels.labels.int2ObjectEntrySet()) {
+			for(Int2ObjectMap.Entry<Int2ObjectMap<LabelSource<K>>> entry2 : labels.labels.int2ObjectEntrySet()) {
 				final int topicCount2 = entry2.getIntKey();
 				final int[] runs2 = entry2.getValue().keySet().toIntArray();
 				
 				if(topicCount1 != topicCount2) {
 					for(int cmpNum = 0; cmpNum < comparisonsPerPair; cmpNum++) {
+						final K key = keySource.randomKey();
+						
 						int run1 = RandUtil.randItem(runs1);
 						int run2 = RandUtil.randItem(runs2);
 						
-						String labelLine1 = labels.getLabels(topicCount1, run1).labels(1)[0];
-						String labelLine2 = labels.getLabels(topicCount2, run2).labels(1)[0];
+						String label1 = labels.getLabels(topicCount1, run1).labels(key, 1)[0];
+						String label2 = labels.getLabels(topicCount2, run2).labels(key, 1)[0];
 						
 						StringBuilder outputLine = new StringBuilder();
+						outputLine.append(key).append(',');
 						outputLine.append(topicCount1).append(',').append(run1).append(',');
 						outputLine.append(topicCount2).append(',').append(run2).append(',');
-						outputLine.append(labelLine1).append(',').append(labelLine2);
+						outputLine.append(label1).append(',').append(label2);
 						output.add(outputLine.toString());
 					}
 				}
@@ -107,6 +114,8 @@ public class CalibrationMerge<T> {
 		
 		// Output comparisons
 		try(PrintWriter w = new PrintWriter(new FileWriter(destFilename))) {
+			w.append("key,");
+			
 			final String[] sides = new String[]{"1","2"};
 			for(String side : sides) {
 				w.append("topicCount").append(side).append(',');
@@ -117,11 +126,11 @@ public class CalibrationMerge<T> {
 				String side = sides[i];
 				w.append("topic").append(side).append(',');
 				
-				for(int wordNum = 0; wordNum < 20; wordNum++) {
-					w.append("model").append(side).append("word").append(String.valueOf(wordNum)).append(',');
-				}
-				w.append("model").append(side).append("label");
-				if(i < sides.length - 1) w.append(',');
+//				for(int wordNum = 0; wordNum < 20; wordNum++) {
+//					w.append("model").append(side).append("word").append(String.valueOf(wordNum)).append(',');
+//				}
+//				w.append("model").append(side).append("label");
+//				if(i < sides.length - 1) w.append(',');
 			}
 			w.append('\n');
 			
