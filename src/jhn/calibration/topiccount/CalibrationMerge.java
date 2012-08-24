@@ -1,9 +1,7 @@
 package jhn.calibration.topiccount;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,9 +65,7 @@ public class CalibrationMerge<K> {
 		Key randomKey();
 	}
 	
-	
-	public void run() throws FileNotFoundException, IOException {
-		
+	public void run() throws Exception {
 		// Load label lines from disk
 		Labels labels = new Labels();
 		for(File file : srcDir.listFiles()) {
