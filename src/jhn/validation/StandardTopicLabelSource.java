@@ -19,6 +19,7 @@ import jhn.util.RandUtil;
 public class StandardTopicLabelSource implements TopicLabelSource, BareLabelSource {
 
 	private Int2ObjectMap<String> labels = new Int2ObjectOpenHashMap<>();
+	private Int2ObjectMap<String[]> topicWords = new Int2ObjectOpenHashMap<>();
 	public StandardTopicLabelSource(String topicLabelsFilename) throws FileNotFoundException, IOException {
 		try(BufferedReader r = new BufferedReader(new FileReader(topicLabelsFilename))) {
 			String line = null;
@@ -26,6 +27,13 @@ public class StandardTopicLabelSource implements TopicLabelSource, BareLabelSour
 				if(!line.startsWith("#")) {
 					String[] parts = line.split(",");
 					int topicNum = Integer.parseInt(parts[0]);
+					
+					String[] topicWords = new String[parts.length-2];
+					for(int i = 1; i < parts.length-1; i++) {
+						topicWords[i-1] = parts[i];
+					}
+					this.topicWords.put(topicNum, topicWords);
+					
 					String label = parts[parts.length-1];
 					label = label.substring(1, label.length()-1);
 					labels.put(topicNum, label);
@@ -49,6 +57,10 @@ public class StandardTopicLabelSource implements TopicLabelSource, BareLabelSour
 	@Override
 	public String[] labels(int numLabels) {
 		return labels(RandUtil.randItem(labels.keySet()), numLabels);
+	}
+	
+	public String[] topicWords(int topicNum) {
+		return topicWords.get(topicNum);
 	}
 
 }
