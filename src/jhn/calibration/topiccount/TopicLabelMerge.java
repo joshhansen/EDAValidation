@@ -17,7 +17,7 @@ public final class TopicLabelMerge extends CalibrationMerge<Integer> {
 	
 	@Override
 	protected Labels<Integer> loadLabels() throws Exception {
-		Labels<Integer> labels = new Labels<Integer>();
+		Labels<Integer> labels = new Labels<>();
 		for(File file : srcDir.listFiles()) {
 			Matcher m = jhn.validation.Paths.NAME_RGX.matcher(file.getName().split("[.]")[0]);
 			m.matches();
@@ -66,11 +66,14 @@ public final class TopicLabelMerge extends CalibrationMerge<Integer> {
 		final int topic1 = randomTopic(topicCount1);
 		final int topic2 = randomTopic(topicCount2);
 		
-		String[] topic1words = ((StandardTopicLabelSource)labels.getLabels(topicCount1, run1)).topicWords(topic1);
-		String[] topic2words = ((StandardTopicLabelSource)labels.getLabels(topicCount2, run2)).topicWords(topic2);
+		final StandardTopicLabelSource labelSource1 = (StandardTopicLabelSource)labels.getLabels(topicCount1, run1);
+		final StandardTopicLabelSource labelSource2 = (StandardTopicLabelSource)labels.getLabels(topicCount2, run2);
 		
-		String label1 = labels.getLabels(topicCount1, run1).labels(topic1, 1)[0];
-		String label2 = labels.getLabels(topicCount2, run2).labels(topic2, 1)[0];
+		String[] topic1words = labelSource1.topicWords(topic1);
+		String[] topic2words = labelSource2.topicWords(topic2);
+		
+		String label1 = labelSource1.labels(topic1, 1)[0];
+		String label2 = labelSource2.labels(topic2, 1)[0];
 		
 		outputLine.append(topicCount1).append(',')
 		          .append(run1).append(',')
@@ -94,7 +97,7 @@ public final class TopicLabelMerge extends CalibrationMerge<Integer> {
 		return outputLine.toString();
 	}
 	
-	private int randomTopic(int topicCount) {
+	private static int randomTopic(int topicCount) {
 		return RandUtil.rand.nextInt(topicCount);
 	}
 	

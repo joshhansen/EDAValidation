@@ -28,11 +28,11 @@ public class StandardTopicLabelSource implements TopicLabelSource, BareLabelSour
 					String[] parts = line.split(",");
 					int topicNum = Integer.parseInt(parts[0]);
 					
-					String[] topicWords = new String[parts.length-2];
+					String[] words = new String[parts.length-2];
 					for(int i = 1; i < parts.length-1; i++) {
-						topicWords[i-1] = parts[i];
+						words[i-1] = parts[i];
 					}
-					this.topicWords.put(topicNum, topicWords);
+					this.topicWords.put(topicNum, words);
 					
 					String label = parts[parts.length-1];
 					label = label.substring(1, label.length()-1);

@@ -46,7 +46,7 @@ public class StandardDocLabelSource implements DocLabelSource, BareLabelSource {
 	}
 	
 	private static final Pattern quotedRgx = Pattern.compile("(['\"]?)(.*)\\1");
-	private String stripQuotes(String s) {
+	private static String stripQuotes(String s) {
 		Matcher m = quotedRgx.matcher(s);
 		m.matches();
 		return m.group(2);

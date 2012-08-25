@@ -23,14 +23,15 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 			   Paths.topicCountCalibrationMergedLauDocLabelsFilename(datasetName),
 			   comparisonsPerPair);
 		
-		final List<String> docFilenames = new ArrayList<>();
+		final List<String> filenames = new ArrayList<>();
 		InstanceList data = InstanceList.load(new File(jhn.Paths.malletDatasetFilename(datasetName)));
 		for(Instance inst : data) {
-			docFilenames.add(inst.getSource().toString());
+			filenames.add(inst.getSource().toString());
 		}
-		this.docFilenames = docFilenames.toArray(new String[0]);
+		this.docFilenames = filenames.toArray(new String[0]);
 	}
 	
+	@Override
 	protected String headerLine() {
 		StringBuilder header = new StringBuilder();
 		header.append("docFilename,docText,");
@@ -52,6 +53,7 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 		return header.toString();
 	}
 
+	@Override
 	protected String mergeLine(Labels<String> labels, final int topicCount1, final int run1, final int topicCount2, final int run2) throws Exception {
 		StringBuilder line = new StringBuilder();
 		

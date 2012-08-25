@@ -40,7 +40,7 @@ public abstract class CalibrationMerge<K> {
 		}
 	}
 
-	protected List<String> randomize(List<String> output) {
+	protected static List<String> randomize(List<String> output) {
 		Collections.shuffle(output);
 		Collections.shuffle(output);
 		Collections.shuffle(output);
@@ -83,7 +83,7 @@ public abstract class CalibrationMerge<K> {
 	}
 
 	protected Labels<K> loadLabels() throws Exception {
-		Labels<K> labels = new Labels<K>();
+		Labels<K> labels = new Labels<>();
 		for(File file : srcDir.listFiles()) {
 			Matcher m = jhn.validation.Paths.NAME_RGX.matcher(file.getName().split("[.]")[0]);
 			m.matches();
