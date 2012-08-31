@@ -12,6 +12,7 @@ public class RunLDA {
 	private static final int NUM_ITERATIONS = 500;
 	
 	public static void generate(String datasetName, int[] topicCounts, int numRuns) throws IOException {
+		ensureDirs(datasetName);
 		for(int numTopics : topicCounts) {
 			for(int run = 0; run < numRuns; run++) {
 				System.out.println("K="+numTopics+" #"+run);
@@ -37,6 +38,12 @@ public class RunLDA {
 				Runtime.getRuntime().exec(cmd.toString());
 			}
 		}
+	}
+	
+	private static void ensureDirs(String dataset) {
+		new File(jhn.validation.Paths.topicCountCalibrationKeysDir(dataset)).mkdirs();
+		new File(jhn.validation.Paths.topicCountCalibrationStateDir(dataset)).mkdirs();
+		new File(jhn.validation.Paths.topicCountCalibrationDocTopicsDir(dataset)).mkdirs();
 	}
 	
 	public static void main(String[] args) throws IOException {
