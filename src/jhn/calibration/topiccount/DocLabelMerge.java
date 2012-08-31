@@ -20,8 +20,8 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 	private String[] docFilenames;
 	public DocLabelMerge(String datasetName, int comparisonsPerPair) {
 		super(Paths.topicCountCalibrationLauDocLabelsDir(datasetName),
-			   Paths.topicCountCalibrationMergedLauDocLabelsFilename(datasetName),
-			   comparisonsPerPair);
+				Paths.topicCountCalibrationMergedLauDocLabelsFilename(datasetName),
+				comparisonsPerPair);
 		
 		final List<String> filenames = new ArrayList<>();
 		InstanceList data = InstanceList.load(new File(jhn.Paths.malletDatasetFilename(datasetName)));
