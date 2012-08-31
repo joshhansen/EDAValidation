@@ -11,6 +11,7 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
 import jhn.util.RandUtil;
+import jhn.util.Util;
 import jhn.validation.LabelSource;
 import jhn.validation.Paths;
 import jhn.validation.StandardDocLabelSource;
@@ -53,12 +54,21 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 		return header.toString();
 	}
 
+	private static final int MIN_CHARS = 80;
 	@Override
 	protected String mergeLine(Labels<String> labels, final int topicCount1, final int run1, final int topicCount2, final int run2) throws Exception {
 		StringBuilder line = new StringBuilder();
+		String filename;
+		String[] parts;
+		String shortFilename;
+		String docText;
+		do {
+			filename = randomFilename();
+			parts = filename.split("/");
+			shortFilename = parts[parts.length - 1];
+			docText = Util.readFile(filename);
+		} while(docText.length() < MIN_CHARS);
 		
-		final String filename = randomFilename();
-		String docText = ((StandardDocLabelSource)labels.getLabels(topicCount1, run1)).docText(filename);
 		String label1 = labels.getLabels(topicCount1, run1).labels(filename, 1)[0];
 		String label2 = labels.getLabels(topicCount2, run2).labels(filename, 1)[0];
 		
