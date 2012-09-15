@@ -27,7 +27,7 @@ import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.idx.IntIndex;
 import jhn.util.Util;
 
-public class GenerateHitData {
+public class EDASampleSummariesToDocLabels {
 	public static IntIntIntCounterMap docTopicCounts(String sampleSummaryFilename) throws Exception {
 		IntIntIntCounterMap counts = new IntIntIntRAMCounterMap();
 		
