@@ -10,11 +10,11 @@ import java.util.List;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
+import jhn.label.LabelSource;
+import jhn.label.doc.StandardDocLabelSource;
 import jhn.util.RandUtil;
 import jhn.util.Util;
-import jhn.validation.LabelSource;
 import jhn.validation.Paths;
-import jhn.validation.StandardDocLabelSource;
 
 public class DocLabelMerge extends CalibrationMerge<String> {
 

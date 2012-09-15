@@ -1,4 +1,6 @@
-package jhn.validation;
+package jhn.label.topic;
+
+import jhn.label.LabelSource;
 
 public interface TopicLabelSource extends LabelSource<Integer> {
 //	@Override

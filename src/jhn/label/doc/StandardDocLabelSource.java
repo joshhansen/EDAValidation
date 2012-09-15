@@ -1,4 +1,4 @@
-package jhn.validation;
+package jhn.label.doc;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jhn.label.BareLabelSource;
 import jhn.util.RandUtil;
 
 /**

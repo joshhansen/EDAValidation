@@ -10,8 +10,8 @@ import java.util.regex.Matcher;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
+import jhn.label.LabelSource;
 import jhn.util.RandUtil;
-import jhn.validation.LabelSource;
 
 /**
  * 

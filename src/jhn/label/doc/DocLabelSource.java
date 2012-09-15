@@ -1,4 +1,6 @@
-package jhn.validation;
+package jhn.label.doc;
+
+import jhn.label.LabelSource;
 
 public interface DocLabelSource extends LabelSource<String> {
 	/**

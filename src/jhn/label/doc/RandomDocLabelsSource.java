@@ -1,13 +1,12 @@
-package jhn.validation.trace;
+package jhn.label.doc;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cc.mallet.types.LabelAlphabet;
 
+import jhn.label.BareLabelSource;
 import jhn.util.RandUtil;
-import jhn.validation.BareLabelSource;
-import jhn.validation.DocLabelSource;
 
 /**
  * A document label source that returns labels selected at random from a LabelAlphabet

@@ -1,4 +1,4 @@
-package jhn.validation;
+package jhn.label.topic;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -8,6 +8,7 @@ import java.io.IOException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+import jhn.label.BareLabelSource;
 import jhn.util.RandUtil;
 
 /**

@@ -19,12 +19,13 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import jhn.counts.d.DoubleCounter;
 import jhn.counts.d.o.ObjDoubleCounter;
 import jhn.eda.lucene.LuceneLabelAlphabet;
+import jhn.label.LabelSource;
 import jhn.idx.Index;
+import jhn.label.doc.DocLabelSource;
+import jhn.label.doc.RandomDocLabelsSource;
+import jhn.label.doc.RandomRunsDocLabelSource;
 import jhn.util.RandUtil;
 import jhn.util.Util;
-import jhn.validation.DocLabelSource;
-import jhn.validation.RandomRunsDocLabelSource;
-import jhn.validation.trace.RandomDocLabelsSource;
 
 
 

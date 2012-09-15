@@ -3,7 +3,7 @@ package jhn.calibration.topiccount;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-import jhn.validation.LabelSource;
+import jhn.label.LabelSource;
 
 /** topicCount -> run -> label source */
 class Labels<Key> {

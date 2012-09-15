@@ -3,9 +3,9 @@ package jhn.calibration.topiccount;
 import java.io.File;
 import java.util.regex.Matcher;
 
+import jhn.label.topic.StandardTopicLabelSource;
 import jhn.util.RandUtil;
 import jhn.validation.Paths;
-import jhn.validation.StandardTopicLabelSource;
 
 public final class TopicLabelMerge extends CalibrationMerge<Integer> {
 

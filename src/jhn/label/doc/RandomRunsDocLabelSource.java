@@ -1,4 +1,4 @@
-package jhn.validation;
+package jhn.label.doc;
 
 import java.io.BufferedReader;
 import java.io.File;

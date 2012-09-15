@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Matcher;
 
-import jhn.validation.StandardTopicLabelSource;
-import jhn.validation.TopicLabelSource;
+import jhn.label.topic.StandardTopicLabelSource;
+import jhn.label.topic.TopicLabelSource;
 
 /**
  * Given doc-topic counts and topic labels, generate document labels
