@@ -86,23 +86,26 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 		return line.toString();
 	}
 	
+	private static final char DELIM = ',';
+	private static final char QUOTE = '"';
+	
 	private static void field(StringBuilder sb, int x) {
 		field(sb, x, false, true);
 	}
 	
 	private static void field(StringBuilder sb, int x, boolean quote, boolean comma) {
 		if(quote) {
-			sb.append('"');
+			sb.append(QUOTE);
 		}
 		
 		sb.append(x);
 		
 		if(quote) {
-			sb.append('"');
+			sb.append(QUOTE);
 		}
 		
 		if(comma) {
-			sb.append(',');
+			sb.append(DELIM);
 		}
 	}
 	
@@ -112,17 +115,17 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 	
 	private static void field(StringBuilder sb, String s, boolean quote, boolean comma) {
 		if(quote) {
-			sb.append('"');
+			sb.append(QUOTE);
 		}
 		
 		sb.append(s);
 		
 		if(quote) {
-			sb.append('"');
+			sb.append(QUOTE);
 		}
 		
 		if(comma) {
-			sb.append(',');
+			sb.append(DELIM);
 		}
 	}
 	
