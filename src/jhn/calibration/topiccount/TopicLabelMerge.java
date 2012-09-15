@@ -10,8 +10,8 @@ import jhn.validation.Paths;
 public final class TopicLabelMerge extends CalibrationMerge<Integer> {
 
 	public TopicLabelMerge(	String datasetName, int comparisonsPerPair) {
-		super(Paths.topicCountCalibrationLauTopicLabelsDir(datasetName),
-			  Paths.topicCountCalibrationMergedLauTopicLabelsFilename(datasetName),
+		super(Paths.lauTopicLabelsDir(datasetName),
+			  Paths.mergedLauTopicLabelsFilename(datasetName),
 			  comparisonsPerPair);
 	}
 	

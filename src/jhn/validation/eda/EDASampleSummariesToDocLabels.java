@@ -150,16 +150,16 @@ public class GenerateHitData {
 		final int topNlabels = 10;
 		final int runCount = 5;
 		
-		final String runsDir = jhn.validation.Paths.outputDir()+"/doclabel/" + datasetName;
+		final String runsDir = jhn.validation.Paths.edaRunsDir(datasetName);// jhn.validation.Paths.outputDir()+"/doclabel/" + datasetName;
 		
 		for(int run = 0; run < runCount; run++) {
-			String runDir = Paths.runDir(runsDir, run);
+			String runDir = jhn.eda.Paths.runDir(runsDir, run);
 			
 	//		String fastStateFilename =    Paths.fastStateFilename(run, iteration);
-			String sampleSummaryFilename = Paths.sampleSummaryFilename(runDir, lastN, minCount);
+			String sampleSummaryFilename = jhn.eda.Paths.sampleSummaryFilename(runDir, lastN, minCount);
 			String topicWordIdxDir =      jhn.Paths.topicWordIndexDir("wp_lucene4");
-			String topicMappingFilename = Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
-			String outputFilename =       Paths.documentLabelHitDataFilename(runDir, lastN, minCount);
+			String topicMappingFilename = jhn.eda.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
+			String outputFilename =       jhn.validation.Paths.edaDocLabelsFilename(datasetName, lastN, run);
 			
 			generate(sampleSummaryFilename, topicWordIdxDir, topicMappingFilename, outputFilename, topNlabels);
 		}

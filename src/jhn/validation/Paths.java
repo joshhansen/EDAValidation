@@ -7,88 +7,88 @@ public class Paths {
 		return jhn.Paths.outputDir("EDAValidation");
 	}
 	
-	public static String topicCountCalibrationDir() {
-		return outputDir() + "/topic_count_calibration";
+	public static String outputDir(String dataset) {
+		return outputDir() + "/" + dataset;
 	}
 	
-	public static String topicCountCalibrationDir(String dataset) {
-		return topicCountCalibrationDir() + "/" + dataset;
+	public static String mergedLauTopicLabelsFilename(String dataset) {
+		return outputDir(dataset) + "/merged_lau_topic_labels.csv";
 	}
 	
-	public static String topicCountCalibrationMergedLauTopicLabelsFilename(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/merged_lau_topic_labels.csv";
+	public static String mergedLauDocLabelsFilename(String dataset) {
+		return outputDir(dataset) + "/merged_lau_doc_labels.csv";
 	}
-	
-	public static String topicCountCalibrationMergedLauDocLabelsFilename(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/merged_lau_doc_labels.csv";
-	}
-	
-	public static String topicCountCalibrationMergedEdaTopicLabelsFilename(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/merged_eda_topic_labels.csv";
-	}
-	
-	public static String topicCountCalibrationMergedEdaDocLabelsFilename(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/merged_eda_doc_labels.csv";
-	}
-	
-//	public static String topicCountCalibrationFilename(int numTopics) {
-//		return topicCountCalibrationDir() + "/aggregate_lda" + numTopics + "topics"
-//	}
 	
 	public static final Pattern NAME_RGX = Pattern.compile("lda(\\d+)topics_(\\d+)");
 	public static String name(int numTopics, int run) {
 		return "lda"+numTopics+"topics_"+run;
 	}
 	
-	public static String topicCountCalibrationStateDir(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/state";
+	public static String lauStateDir(String dataset) {
+		return outputDir(dataset) + "/lau_state";
 	}
 	
 	public static String topicCountCalibrationStateFilename(String dataset, int numTopics, int run) {
-		return topicCountCalibrationStateDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.STATE_EXT;
+		return lauStateDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.STATE_GZ_EXT;
 	}
 	
-	public static String topicCountCalibrationLogFilename(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/main.log";
+	public static String lauLogFilename(String dataset) {
+		return outputDir(dataset) + "/main.log";
 	}
 	
-	public static String topicCountCalibrationKeysDir(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/keys";
+	public static String lauKeysDir(String dataset) {
+		return outputDir(dataset) + "/lau_keys";
 	}
 	
-	public static String topicCountCalibrationKeysFilename(String dataset, int numTopics, int run) {
-		return topicCountCalibrationKeysDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.KEYS_EXT;
+	public static String lauKeysFilename(String dataset, int numTopics, int run) {
+		return lauKeysDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.KEYS_EXT;
 	}
 	
-	public static String topicCountCalibrationLauTopicLabelsDir(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/lau_topic_labels";
+	public static String lauTopicLabelsDir(String dataset) {
+		return outputDir(dataset) + "/lau_topic_labels";
 	}
 	
-	public static String topicCountCalibrationLauTopicLabelsFilename(String dataset, int numTopics, int run) {
-		return topicCountCalibrationLauTopicLabelsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.TOPIC_LABELS_EXT;
+	public static String lauTopicLabelsFilename(String dataset, int numTopics, int run) {
+		return lauTopicLabelsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.TOPIC_LABELS_EXT;
 	}
 	
-	public static String topicCountCalibrationLauDocLabelsDir(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/lau_doc_labels";
+	public static String lauDocLabelsDir(String dataset) {
+		return outputDir(dataset) + "/lau_doc_labels";
 	}
 	
-	public static String topicCountCalibrationLauDocLabelsFilename(String dataset, int numTopics, int run) {
-		return topicCountCalibrationLauDocLabelsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.DOC_LABELS_EXT;
+	public static String lauDocLabelsFilename(String dataset, int numTopics, int run) {
+		return lauDocLabelsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.DOC_LABELS_EXT;
 	}
 	
-	public static String topicCountCalibrationEdaDocLabelsDir(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/eda_doc_labels";
+	public static String edaRunsDir(String dataset) {
+		return outputDir(dataset) + "/eda_runs";
 	}
 	
-	public static String topicCountCalibrationEdaDocLabelsFilename(String dataset, int numTopics, int run) {
-		return topicCountCalibrationEdaDocLabelsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.DOC_LABELS_EXT;
+	public static String edaDocLabelsDir(String dataset) {
+		return outputDir(dataset) + "/eda_doc_labels";
 	}
 	
-	public static String topicCountCalibrationDocTopicsDir(String dataset) {
-		return topicCountCalibrationDir(dataset) + "/doctopics";
+	public static String edaDocLabelsFilename(String dataset, int lastN, int run) {
+		return edaDocLabelsDir(dataset) + "/last" + lastN + "_" + run + jhn.Paths.DOC_LABELS_EXT;
 	}
 	
-	public static String topicCountCalibrationDocTopicsFilename(String dataset, int numTopics, int run) {
-		return topicCountCalibrationDocTopicsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.DOCTOPICS_EXT;
+	public static String lauDocTopicsDir(String dataset) {
+		return outputDir(dataset) + "/lau_doctopics";
+	}
+	
+	public static String lauDocTopicsFilename(String dataset, int numTopics, int run) {
+		return lauDocTopicsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.DOCTOPICS_EXT;
+	}
+	
+	public static String hitDataDir(String dataset) {
+		return outputDir(dataset) + "/hit_data";
+	}
+	
+	public static String mergedDocLabelsFilename(String dataset, int numComparisons, int chooseFromTopN) {
+		return hitDataDir(dataset) + "/merged_document_labels"
+			+ "_" + dataset
+			+ "_cmps" + numComparisons
+			+ "_n" + chooseFromTopN
+			+ "_6.hit.csv";
 	}
 }

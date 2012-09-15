@@ -24,12 +24,12 @@ public class LauTopicLabelsToDocLabels {
 			int topicCount = Integer.parseInt(m.group(1));
 			int run = Integer.parseInt(m.group(2));
 			
-			String topicLabelsFilename = jhn.validation.Paths.topicCountCalibrationLauTopicLabelsFilename(datasetName, topicCount, run);
+			String topicLabelsFilename = jhn.validation.Paths.lauTopicLabelsFilename(datasetName, topicCount, run);
 
 			
 			TopicLabelSource tls = new StandardTopicLabelSource(topicLabelsFilename);
 			
-			String outputFilename = jhn.validation.Paths.topicCountCalibrationLauDocLabelsFilename(datasetName, topicCount, run);
+			String outputFilename = jhn.validation.Paths.lauDocLabelsFilename(datasetName, topicCount, run);
 			
 			try(BufferedReader r = new BufferedReader(new FileReader(docTopicsFile));
 					PrintWriter w = new PrintWriter(outputFilename)) {
@@ -61,7 +61,7 @@ public class LauTopicLabelsToDocLabels {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		String datasetName = "reuters21578_noblah";
-		String docTopicsDir = jhn.validation.Paths.topicCountCalibrationDocTopicsDir(datasetName);
+		String docTopicsDir = jhn.validation.Paths.lauDocTopicsDir(datasetName);
 		generate(datasetName, docTopicsDir);
 	}
 }

@@ -150,8 +150,8 @@ public class MergeHitData {
 		final int cmpsPerDoc = 1;
 		final int chooseFromTopN = 1;
 		
-		final String edaLabelsDir = jhn.validation.Paths.topicCountCalibrationEdaDocLabelsDir(datasetName);
-		final String lauLabelsDir = jhn.validation.Paths.topicCountCalibrationLauDocLabelsDir(datasetName);
+		final String edaLabelsDir = jhn.validation.Paths.edaDocLabelsDir(datasetName);
+		final String lauLabelsDir = jhn.validation.Paths.lauDocLabelsDir(datasetName);
 		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir);
 		DocLabelSource lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir);
 		
@@ -164,20 +164,12 @@ public class MergeHitData {
 			mhd.modelProportions.set(lauEtAl, 0.45);
 			mhd.modelProportions.set(rand, 0.1);
 			
+			String outputFilename = jhn.validation.Paths.mergedDocLabelsFilename(datasetName, numComparisons, chooseFromTopN);
+			
 			mhd.modelNames.put(eda, "EDA");
 			mhd.modelNames.put(lauEtAl, "LAU_ET_AL");
 			mhd.modelNames.put(rand, "RANDOM");
 			
-			final String outputFilename = jhn.Paths.outputDir("EDAValidation")
-				+ "/merged_document_labels"
-				+ "_" + datasetName
-				+ "_docs" + numDocs
-				+ "_cmpsPerDoc" + cmpsPerDoc
-//				+ "_tracePrp" + traceProp
-				+ "_n" + chooseFromTopN
-				+ "_minTokens" + MIN_TOKENS
-				+ "_minAlphaPct" + MIN_ALPHA_PCT
-				+ "_5.hit.csv";
 			
 			@SuppressWarnings("unchecked")
 			Index<String> docFilenames = (Index<String>) Util.deserialize(jhn.Paths.malletDatasetFilenameIndexFilename(datasetName));

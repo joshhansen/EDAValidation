@@ -20,8 +20,8 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 
 	private String[] docFilenames;
 	public DocLabelMerge(String datasetName, int comparisonsPerPair) {
-		super(Paths.topicCountCalibrationLauDocLabelsDir(datasetName),
-				Paths.topicCountCalibrationMergedLauDocLabelsFilename(datasetName),
+		super(Paths.lauDocLabelsDir(datasetName),
+				Paths.mergedLauDocLabelsFilename(datasetName),
 				comparisonsPerPair);
 		
 		final List<String> filenames = new ArrayList<>();
