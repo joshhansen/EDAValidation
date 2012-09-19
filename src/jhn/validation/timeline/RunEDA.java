@@ -4,7 +4,7 @@ import jhn.eda.EDA;
 import jhn.eda.listeners.PrintFastState;
 
 public class RunEDA extends jhn.eda.RunEDA {
-	
+	private static final int PRINT_INTERVAL = 1;
 	private final int window;
 	
 	public RunEDA() {
