@@ -3,12 +3,10 @@ package jhn.validation.doclabel;
 import java.io.File;
 
 import jhn.eda.EDA;
-import jhn.eda.listeners.PrintDocTopics;
 import jhn.eda.listeners.PrintFastState;
-import jhn.eda.listeners.PrintTopDocTopics;
-import jhn.eda.listeners.PrintTopTopicWords;
 
 public class RunEDA extends jhn.eda.RunEDA {
+	private static final int PRINT_INTERVAL = 1;
 	protected int runCount;
 	public RunEDA(String datasetName, int runCount, int iterations, int minCount) {
 		this.datasetName = datasetName;
@@ -24,10 +22,11 @@ public class RunEDA extends jhn.eda.RunEDA {
 	public void run() throws Exception {
 		super.loadAll();
 		for(int i = 0; i < runCount; i++) {
-			System.out.println("----- Run " + i + " -----");
 			moveToNextRun();
+			System.out.println("----- Run " + run + " -----");
 			super.runEDA();
 		}
+		super.unloadAll();
 	}
 	
 	@Override
