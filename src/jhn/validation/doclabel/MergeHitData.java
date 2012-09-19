@@ -17,8 +17,6 @@ import cc.mallet.types.LabelAlphabet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 
-import jhn.counts.d.DoubleCounter;
-import jhn.counts.d.o.ObjDoubleCounter;
 import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.label.LabelSource;
 import jhn.idx.Index;
@@ -26,13 +24,27 @@ import jhn.label.doc.DocLabelSource;
 import jhn.label.doc.RandomDocLabelsSource;
 import jhn.label.doc.RandomRunsDocLabelSource;
 import jhn.util.RandUtil;
+import jhn.validation.Merger;
 import jhn.util.Util;
 
 
 
-public class MergeHitData {
-	private Reference2ObjectMap<DocLabelSource,String> modelNames = new Reference2ObjectOpenHashMap<>();
-	private DoubleCounter<DocLabelSource> modelProportions = new ObjDoubleCounter<>();
+public class MergeHitData extends Merger<String> {
+	private final String[] docFilenames;
+	private final int chooseFromTopN;
+	private Reference2ObjectMap<LabelSource<String>,String> modelNames = new Reference2ObjectOpenHashMap<>();
+	
+	public MergeHitData(String datasetName, int comparisons, String destFilename, int chooseFromTopN) {
+		super(comparisons, destFilename);
+		this.chooseFromTopN = chooseFromTopN;
+		
+		final List<String> filenames = new ArrayList<>();
+		InstanceList data = InstanceList.load(new File(jhn.Paths.malletDatasetFilename(datasetName)));
+		for(Instance inst : data) {
+			filenames.add(inst.getSource().toString());
+		}
+		this.docFilenames = filenames.toArray(new String[0]);
+	}
 
 	private static String loadDocument(String filename) throws Exception {
 		StringBuilder doc = new StringBuilder();
