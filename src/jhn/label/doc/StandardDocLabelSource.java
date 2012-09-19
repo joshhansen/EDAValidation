@@ -14,7 +14,7 @@ import jhn.util.RandUtil;
 /**
  * Format:
  *     #comment
- *     docNum,filename,label1,label2,...,labelN
+ *     docNum,filename,"label1","label2",...,"labelN"
  *
  */
 public class StandardDocLabelSource implements DocLabelSource, BareLabelSource {
