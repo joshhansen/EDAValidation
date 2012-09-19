@@ -13,8 +13,8 @@ public class SummarizeSamples {
 		
 		final String runsDir = jhn.validation.Paths.edaRunsDir(datasetName);
 		final int runCount = 5;
-		final int lastN = 50;
-		final int minCount = 0;
+		final int lastN = 10;
+		final int minCount = 2;
 		
 		for(int run = 0; run < runCount; run++) {
 			System.out.println("----- Run " + run + " -----");
