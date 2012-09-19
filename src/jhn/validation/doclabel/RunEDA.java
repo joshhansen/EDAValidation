@@ -36,10 +36,10 @@ public class RunEDA extends jhn.eda.RunEDA {
 		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir(), false));
-		eda.addListener(new PrintDocTopics(PRINT_INTERVAL, runDir()));
+//		eda.addListener(new PrintDocTopics(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new SerializeModel(PRINT_INTERVAL, runDir()));
-		eda.addListener(new PrintTopDocTopics(PRINT_INTERVAL, runDir(), 10));
-		eda.addListener(new PrintTopTopicWords(PRINT_INTERVAL, runDir(), 10));
+//		eda.addListener(new PrintTopDocTopics(PRINT_INTERVAL, runDir(), 10));
+//		eda.addListener(new PrintTopTopicWords(PRINT_INTERVAL, runDir(), 10));
 	}
 	
 	public static void main(String[] args) throws Exception {
