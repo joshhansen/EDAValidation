@@ -59,13 +59,9 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 	protected String mergeLine(Labels<String> labels, final int topicCount1, final int run1, final int topicCount2, final int run2) throws Exception {
 		StringBuilder line = new StringBuilder();
 		String filename;
-		String[] parts;
-		String shortFilename;
 		String docText;
 		do {
 			filename = randomFilename();
-			parts = filename.split("/");
-			shortFilename = parts[parts.length - 1];
 			docText = Util.readFile(filename);
 		} while(docText.length() < MIN_CHARS);
 		
