@@ -17,7 +17,9 @@ import jhn.label.topic.TopicLabelSource;
  */
 public class LauTopicLabelsToDocLabels {
 	public static void generate(String datasetName, String docTopicsDir) throws FileNotFoundException, IOException {
+		System.out.println(docTopicsDir);
 		for(File docTopicsFile : new File(docTopicsDir).listFiles()) {
+			System.out.println("\t"+docTopicsFile);
 			String name = docTopicsFile.getName().split("[.]")[0];
 			Matcher m = jhn.validation.Paths.NAME_RGX.matcher(name);
 			m.matches();
