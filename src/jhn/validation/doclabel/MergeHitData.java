@@ -139,9 +139,7 @@ public class MergeHitData extends Merger<String> {
 	public static void main(String[] args) throws Exception {
 		final String datasetName = "toy_dataset4";
 		String topicWordIdxDir = jhn.Paths.topicWordIndexDir("wp_lucene4");
-		final int numDocs = 100;
-		final int labelsPerDoc = 10;
-		final int cmpsPerDoc = 1;
+		final int numComparisons = 200;
 		final int chooseFromTopN = 1;
 		
 		final String edaLabelsDir = jhn.validation.Paths.edaDocLabelsDir(datasetName);
