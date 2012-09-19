@@ -3,15 +3,16 @@ package jhn.validation.doclabel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.PrintStream;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 
+import cc.mallet.types.Instance;
+import cc.mallet.types.InstanceList;
 import cc.mallet.types.LabelAlphabet;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
@@ -19,13 +20,11 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 
 import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.label.LabelSource;
-import jhn.idx.Index;
 import jhn.label.doc.DocLabelSource;
 import jhn.label.doc.RandomDocLabelsSource;
 import jhn.label.doc.RandomRunsDocLabelSource;
 import jhn.util.RandUtil;
 import jhn.validation.Merger;
-import jhn.util.Util;
 
 
 
@@ -49,7 +48,7 @@ public class MergeHitData extends Merger<String> {
 	private static String loadDocument(String filename) throws Exception {
 		StringBuilder doc = new StringBuilder();
 		
-		try(BufferedReader r = new BufferedReader(new FileReader(filename.replace("file:", "")))) {
+		try(BufferedReader r = new BufferedReader(new FileReader(filename))) {
 			String tmp = null;
 			while( (tmp=r.readLine()) != null) {
 				tmp = tmp.replace("&","&amp;")
@@ -70,89 +69,71 @@ public class MergeHitData extends Merger<String> {
 		return "http://en.wikipedia.org/wiki/" + label.replace(" ", "_");
 	}
 	
-	private static int numTokens(String text) {
-		return text.split("\\s+").length;
+	private static String cleanLabel(String label) {
+		return StringUtils.capitalize(label.trim());
 	}
 	
-	private static final Pattern nonAlphaRgx = Pattern.compile("[^A-Za-z]+");
-	private static double alphaPct(String text) {
-		return (double) nonAlphaRgx.split(text).length / (double) numTokens(text);
+	protected String randKey() {
+		return RandUtil.randItem(docFilenames);
 	}
 	
-	private static final int MIN_TOKENS = 90;
-	private static final double MIN_ALPHA_PCT = 0.9;
-	private static boolean docOK(String text) {
-		if(text.isEmpty()) return false;
-		if(text.contains("Blah blah blah")) return false;
-		if(alphaPct(text) < MIN_ALPHA_PCT) return false;
-		if(numTokens(text) < MIN_TOKENS) return false;
+	private static final int MIN_DOC_LENGTH = 100;
+	private static final int MIN_TOKEN_COUNT = 80;
+	private static boolean docTextOK(String docText) {
+		if(docText.length() < MIN_DOC_LENGTH) return false;
+		if(docText.split("\\s+").length < MIN_TOKEN_COUNT) return false;
 		return true;
 	}
 	
-	public void merge(Index<String> docFilenames, String outputFilename, int numDocs, int labelsPerDoc,
-			int comparisonsPerDoc, int chooseFromTopN) throws Exception {
-		
-		try(PrintStream w = new PrintStream(new FileOutputStream(outputFilename))) {
-			w.println("model1,model2,docnum,doctext,model1label,model2label,model1wplink,model2wplink");
-			
-			for(int docIterNum = 0; docIterNum < numDocs; docIterNum++) {
-				int docNum;
-				String filename;
-				String text;
-				
-				do {
-					docNum = RandUtil.rand.nextInt(docFilenames.size());
-					filename = docFilenames.objectAt(docNum);
-					text = loadDocument(filename);
-				} while(!docOK(text));
-				
-				for(int comparisonNum = 0; comparisonNum < comparisonsPerDoc; comparisonNum++) {
-					DocLabelSource[] models = initModels();
-					String[] labels = initLabels(models, filename, labelsPerDoc, chooseFromTopN);
-					cleanLabels(labels);
-					
-					w.append(modelNames.get(models[0])).append(',').append(modelNames.get(models[1]));
-					w.print(',');
-					w.print(docNum);
-					w.append(",\"").append(text).append("\"");
-					w.append(",\"").append(labels[0]).append("\"");
-					w.append(",\"").append(labels[1]).append("\"");
-					
-					//Wikipedia links:
-					w.append(",\"").append(wpLinkify(labels[0])).append("\"");
-					w.append(",\"").append(wpLinkify(labels[1])).append("\"");
-					w.println();
-					
-				}//end for comparisons
-			}//end for docs
-		}// end try
-	}// end void merge
-
-	private static void cleanLabels(String[] labels) {
-		for(int k = 0; k < labels.length; k++) {
-			labels[k] = StringUtils.capitalize(labels[k].trim());
-		}
-	}
-
-	private static String[] initLabels(DocLabelSource[] models, String docFilename, int labelsPerDoc, int chooseFromTopN) throws Exception {
-		String[] labels = new String[2];
-		for(int position = 0; position < labels.length; position++) {
-			labels[position] = RandUtil.randItem(models[position].labels(docFilename, labelsPerDoc), chooseFromTopN);
-		}
-		return labels;
-	}
-
-	private DocLabelSource randModel() {
-		return modelProportions.sample();
-	}
-	
-	private DocLabelSource[] initModels() {
-		DocLabelSource[] models = new DocLabelSource[2];
-		models[0] = randModel();
+	@Override
+	protected String mergeLine(LabelSource<String> src1, LabelSource<String> src2) throws Exception {
+		String docFilename;
+		String docText;
 		do {
-			models[1] = randModel();
-		} while(models[1] != models[0]);
-		return models;
+			docFilename = randKey();
+			docText = loadDocument(docFilename.replaceAll("file:/home/jjfresh", "/home/josh"));
+		} while(!docTextOK(docText));
+		
+		System.out.println("Filename: " + docFilename);
+		
+		String[] labels1 = src1.labels(docFilename, chooseFromTopN);
+		String[] labels2 = src2.labels(docFilename, chooseFromTopN);
+		String label1 = cleanLabel(RandUtil.randItem(labels1));
+		String label2 = cleanLabel(RandUtil.randItem(labels2));
+		
+		StringBuilder w = new StringBuilder();
+		w.append(modelNames.get(src1)).append(',').append(modelNames.get(src2));
+		w.append(',');
+		w.append(docFilename);
+		w.append(",\"").append(docText).append("\"");
+		w.append(",\"").append(label1).append("\"");
+		w.append(",\"").append(wpLinkify(label1)).append("\"");
+		w.append(",\"").append(label2).append("\"");
+		w.append(",\"").append(wpLinkify(label2)).append("\"");
+		
+		return w.toString();
+	}
+
+	@Override
+	protected String headerLine() {
+		StringBuilder header = new StringBuilder();
+		
+		final String[] sides = new String[]{"1","2"};
+		for(String side : sides) {
+			header.append("model").append(side).append(',');
+		}
+		
+		header.append("docFilename,docText,");
+		
+		for(int i = 0; i < sides.length; i++) {
+			String side = sides[i];
+			header.append("label").append(side).append(',');
+			header.append("wplink").append(side);
+			if(i < sides.length - 1) {
+				header.append(',');
+			}
+		}
+		return header.toString();
 	}
 	
 	public static void main(String[] args) throws Exception {
@@ -184,21 +165,23 @@ public class MergeHitData extends Merger<String> {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
 			DocLabelSource rand = new RandomDocLabelsSource(labels);
 			
-			MergeHitData mhd = new MergeHitData();
-			mhd.modelProportions.set(eda, 0.45);
-			mhd.modelProportions.set(lauEtAl, 0.45);
-			mhd.modelProportions.set(rand, 0.1);
+			File outputDir = new File(jhn.validation.Paths.hitDataDir(datasetName));
+			if(!outputDir.exists()) {
+				outputDir.mkdirs();
+			}
 			
 			String outputFilename = jhn.validation.Paths.mergedDocLabelsFilename(datasetName, numComparisons, chooseFromTopN);
+			
+			MergeHitData mhd = new MergeHitData(datasetName, numComparisons, outputFilename, chooseFromTopN);
+			mhd.setModelProportion(eda, 0.45);
+			mhd.setModelProportion(lauEtAl, 0.45);
+			mhd.setModelProportion(rand, 0.1);
 			
 			mhd.modelNames.put(eda, "EDA");
 			mhd.modelNames.put(lauEtAl, "LAU_ET_AL");
 			mhd.modelNames.put(rand, "RANDOM");
 			
-			
-			@SuppressWarnings("unchecked")
-			Index<String> docFilenames = (Index<String>) Util.deserialize(jhn.Paths.malletDatasetFilenameIndexFilename(datasetName));
-			mhd.merge(docFilenames, outputFilename, numDocs, labelsPerDoc, cmpsPerDoc, chooseFromTopN);
-		} //end try
+			mhd.run();
+		}
 	}
 }
