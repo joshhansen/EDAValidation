@@ -10,15 +10,12 @@ import jhn.eda.listeners.PrintTopTopicWords;
 
 public class RunEDA extends jhn.eda.RunEDA {
 	protected int runCount;
-	public RunEDA(String outputDir, int runCount) {
-//		this.datasetName = "reuters21578_noblah";
-		this.datasetName = "toy_dataset4";
-		
-		this.runsDir = outputDir + "/" + datasetName;
+	public RunEDA(String datasetName, int runCount, int iterations, int minCount) {
+		this.datasetName = datasetName;
+		this.runsDir = jhn.validation.Paths.edaRunsDir(datasetName);
 		this.runCount = runCount;
-		this.iterations = 5;
-
-		minCount = 0;
+		this.iterations = iterations;
+		this.minCount = minCount;
 		
 		new File(this.runsDir).mkdirs();
 	}
@@ -46,8 +43,11 @@ public class RunEDA extends jhn.eda.RunEDA {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		final String datasetName = "reuters21578_noblah";
+		final int iterations = 50;
 		final int runCount = 5;
-		RunEDA runner = new RunEDA(jhn.validation.Paths.outputDir()+"/doclabel", runCount);
+		final int minCount = 2;
+		RunEDA runner = new RunEDA(datasetName, runCount, iterations, minCount);
 		runner.run();
 	}
 
