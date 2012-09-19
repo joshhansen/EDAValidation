@@ -3,7 +3,6 @@ package jhn.calibration.topiccount;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +125,7 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 	}
 	
 	private static String cleanDocText(String docText) throws UnsupportedEncodingException {
-		return URLEncoder.encode(docText, "utf-8").replaceAll("\\n", "<br/>");
+		return docText.replaceAll("\\n", "<br/>").replaceAll("\"", "'");
 	}
 	
 	private static String wpLinkify(String label) {
