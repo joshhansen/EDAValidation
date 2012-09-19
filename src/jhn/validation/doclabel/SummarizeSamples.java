@@ -20,8 +20,9 @@ public class SummarizeSamples {
 			System.out.println("----- Run " + run + " -----");
 
 			final String runDir = Paths.runDir(runsDir, run);
-			SampleSummarizer.summarize(runDir, lastN, minCount, false);
+			SampleSummarizer.summarize(runDir, lastN, minCount);
 		}
+		
 		final long stop = Calendar.getInstance().getTimeInMillis();
 		
 		System.out.println("Duration: " + (stop-start) + "ms");
