@@ -1,12 +1,14 @@
 package jhn.validation.doclabel;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import jhn.eda.Paths;
 import jhn.eda.SampleSummarizer;
 
 public class SummarizeSamples {
 	public static void main(String[] args) throws IOException {
+		final long start = Calendar.getInstance().getTimeInMillis();
 		String datasetName = "toy_dataset4";
 		
 		final String runsDir = jhn.validation.Paths.edaRunsDir(datasetName);
@@ -20,5 +22,8 @@ public class SummarizeSamples {
 			final String runDir = Paths.runDir(runsDir, run);
 			SampleSummarizer.summarize(runDir, lastN, minCount, false);
 		}
+		final long stop = Calendar.getInstance().getTimeInMillis();
+		
+		System.out.println("Duration: " + (stop-start) + "ms");
 	}
 }
