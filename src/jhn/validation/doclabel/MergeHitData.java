@@ -2,6 +2,7 @@ package jhn.validation.doclabel;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
@@ -152,8 +153,20 @@ public class MergeHitData {
 		
 		final String edaLabelsDir = jhn.validation.Paths.edaDocLabelsDir(datasetName);
 		final String lauLabelsDir = jhn.validation.Paths.lauDocLabelsDir(datasetName);
-		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir);
-		DocLabelSource lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir);
+		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir, new FileFilter(){
+			@Override
+			public boolean accept(File pathname) {
+				String name = pathname.getName();
+				return name.startsWith("last10_") && name.endsWith(jhn.Paths.DOC_LABELS_EXT);
+			}
+		});
+		DocLabelSource lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir, new FileFilter(){
+			@Override
+			public boolean accept(File pathname) {
+				String name = pathname.getName();
+				return name.startsWith("lda10topics") && name.endsWith(jhn.Paths.DOC_LABELS_EXT);
+			}
+		});
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
