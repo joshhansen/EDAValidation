@@ -22,13 +22,13 @@ import jhn.counts.Counter;
 import jhn.counts.i.i.IntIntCounter;
 import jhn.counts.i.i.i.IntIntIntCounterMap;
 import jhn.counts.i.i.i.IntIntIntRAMCounterMap;
-import jhn.eda.Paths;
 import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.idx.IntIndex;
 import jhn.util.Util;
 
 public class EDASampleSummariesToDocLabels {
 	public static IntIntIntCounterMap docTopicCounts(String sampleSummaryFilename) throws Exception {
+		System.out.println(sampleSummaryFilename);
 		IntIntIntCounterMap counts = new IntIntIntRAMCounterMap();
 		
 		try(BufferedReader r = new BufferedReader(new FileReader(sampleSummaryFilename))) {
@@ -41,9 +41,9 @@ public class EDASampleSummariesToDocLabels {
 				if(!tmp.startsWith("#")) {
 					parts = tmp.split("\\s+");
 					
-					docNum = Integer.parseInt(parts[1]);
+					docNum = Integer.parseInt(parts[0]);
 					
-					for(int i = 3; i < parts.length; i++) {
+					for(int i = 2; i < parts.length; i++) {
 						subparts = parts[i].split(":");
 						counts.set(docNum, Integer.parseInt(subparts[0]), Integer.parseInt(subparts[1]));
 					}
@@ -70,8 +70,8 @@ public class EDASampleSummariesToDocLabels {
 			while( (tmp=r.readLine()) != null) {
 				if(!tmp.startsWith("#")) {
 					parts = tmp.split("\\s+");
-					docNum = Integer.parseInt(parts[1]);
-					sources.put(docNum, parts[2]);
+					docNum = Integer.parseInt(parts[0]);
+					sources.put(docNum, parts[1]);
 				}
 			}
 		}
@@ -110,8 +110,9 @@ public class EDASampleSummariesToDocLabels {
 	private static void generate(IntIntIntCounterMap docTopicCounts, Int2ObjectMap<String> docFilenames,
 								   LabelAlphabet labels, IntIndex topicMapping, int topNlabels, String outputFilename) throws Exception {
 		
+		System.out.println("Writing " + outputFilename);
 		try(PrintStream w = new PrintStream(new FileOutputStream(outputFilename))) {
-			w.println("docnum,source,topic1label,topic2label,topic3label,topic4label,topic5label,topic6label,topic7label,topic8label,topic9label,topic10label");
+			w.println("#docnum,source,topic1label,topic2label,topic3label,topic4label,topic5label,topic6label,topic7label,topic8label,topic9label,topic10label");
 			
 			int topicNum;
 			int globalTopicNum;
