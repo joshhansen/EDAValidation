@@ -142,12 +142,12 @@ public class EDASampleSummariesToDocLabels {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		final int minCount = 0;
+		final int minCount = 2;
 		final String topicWordIdxName = "wp_lucene4";
 		final String datasetName = "toy_dataset4";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
 //		final int run = 17;
 //		final int iteration = 95;
-		final int lastN = 50;
+		final int lastN = 10;
 		final int topNlabels = 10;
 		final int runCount = 5;
 		
