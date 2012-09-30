@@ -2,9 +2,10 @@ package jhn.calibration.topiccount;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
@@ -53,7 +54,6 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 		return header.toString();
 	}
 
-	private static final int MIN_CHARS = 80;
 	@Override
 	protected String mergeLine(Labels<String> labels, final int topicCount1, final int run1, final int topicCount2, final int run2) throws Exception {
 		StringBuilder line = new StringBuilder();
@@ -62,7 +62,7 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 		do {
 			filename = randomFilename();
 			docText = Util.readFile(filename);
-		} while(docText.length() < MIN_CHARS);
+		} while(!docTextOK(docText));
 		
 		String label1 = labels.getLabels(topicCount1, run1).labels(filename, 1)[0];
 		String label2 = labels.getLabels(topicCount2, run2).labels(filename, 1)[0];
@@ -124,7 +124,28 @@ public class DocLabelMerge extends CalibrationMerge<String> {
 		}
 	}
 	
-	private static String cleanDocText(String docText) throws UnsupportedEncodingException {
+	private static final int MIN_DOC_LENGTH = 100;
+	private static final int MIN_TOKEN_COUNT = 80;
+	private static final double MAX_PERCENT_NUMERIC = 0.2;
+	
+	public static boolean docTextOK(String docText) {
+		if(docText.length() < MIN_DOC_LENGTH) return false;
+		if(docText.split("\\s+").length < MIN_TOKEN_COUNT) return false;
+		if(percentNumeric(docText) > MAX_PERCENT_NUMERIC) return false;
+		return true;
+	}
+	
+	private static final Pattern numeric = Pattern.compile("[0-9]+");
+	private static double percentNumeric(String docText) {
+		int numFreq = 0;
+		Matcher m = numeric.matcher(docText);
+		while(m.find()) {
+			numFreq += m.group().length();
+		}
+		return (double) numFreq / (double) docText.length();
+	}
+	
+	private static String cleanDocText(String docText) {
 		return docText.replaceAll("\\n", "<br/>").replaceAll("\"", "'");
 	}
 	
