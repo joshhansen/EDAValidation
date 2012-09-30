@@ -1,1 +1,1 @@
- mallet import-dir --input ~/Data/reuters21578/data/* --output ~/Projects/eda/datasets/reuters21578.mallet --remove-stopwords --keep-sequence-bigrams
+ mallet import-dir --input ~/Data/reuters21578/data/* --extra-stopwords ~/Projects/EDAValidation/extra_stopwords/reuters21578.txt --output ./reuters21578.mallet --remove-stopwords --keep-sequence-bigrams
