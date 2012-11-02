@@ -91,12 +91,14 @@ public class MergeHitData extends Merger<String> {
 		String docText;
 		do {
 			docFilename = randKey();
-			docText = loadDocument(docFilename.replaceAll("file:/home/jjfresh", "/home/josh"));
+			docText = loadDocument(docFilename.replaceAll("file:/home/[^/]+/", System.getenv("HOME")+"/"));
 		} while(!docTextOK(docText));
 		
 		System.out.println("Filename: " + docFilename);
 		
+		System.out.println(modelNames.get(src1));
 		String[] labels1 = src1.labels(docFilename, chooseFromTopN);
+		System.out.println(modelNames.get(src2));
 		String[] labels2 = src2.labels(docFilename, chooseFromTopN);
 		String label1 = cleanLabel(RandUtil.randItem(labels1));
 		String label2 = cleanLabel(RandUtil.randItem(labels2));
@@ -137,7 +139,8 @@ public class MergeHitData extends Merger<String> {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		final String datasetName = "toy_dataset4";
+//		final String datasetName = "toy_dataset4";
+		final String datasetName = "sotu_chunks";
 		String topicWordIdxDir = jhn.Paths.topicWordIndexDir("wp_lucene4");
 		final int numComparisons = 200;
 		final int chooseFromTopN = 1;

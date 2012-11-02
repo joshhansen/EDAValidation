@@ -42,7 +42,7 @@ public class RunEDA extends jhn.eda.RunEDA {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		final String datasetName = "reuters21578_noblah";
+		final String datasetName = "sotu_chunks";
 		final int iterations = 50;
 		final int runCount = 5;
 		final int minCount = 2;

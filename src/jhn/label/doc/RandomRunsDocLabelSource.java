@@ -37,6 +37,7 @@ public class RandomRunsDocLabelSource implements DocLabelSource {
 	@Override
 	public String[] labels(String docFilename, int numLabels) {
 		int run = RandUtil.randItem(allLabels.keySet().toIntArray());
+		System.out.println("Run: " + run);
 		String[] labels = allLabels.get(run).labels(docFilename, numLabels);
 		
 		String[] selectedLabels = new String[numLabels];

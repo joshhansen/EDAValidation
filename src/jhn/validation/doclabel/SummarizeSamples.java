@@ -9,7 +9,7 @@ import jhn.eda.SampleSummarizer;
 public class SummarizeSamples {
 	public static void main(String[] args) throws IOException {
 		final long start = Calendar.getInstance().getTimeInMillis();
-		String datasetName = "toy_dataset4";
+		String datasetName = "sotu_chunks";
 		
 		final String runsDir = jhn.validation.Paths.edaRunsDir(datasetName);
 		final int runCount = 5;
