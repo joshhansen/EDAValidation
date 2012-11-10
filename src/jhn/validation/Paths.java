@@ -68,8 +68,8 @@ public class Paths {
 		return outputDir(dataset) + "/eda_doc_labels";
 	}
 	
-	public static String edaDocLabelsFilename(String dataset, int lastN, int run) {
-		return edaDocLabelsDir(dataset) + "/last" + lastN + "_" + run + jhn.Paths.DOC_LABELS_EXT;
+	public static String edaDocLabelsFilename(String dataset, int firstIter, int lastIter, int run) {
+		return edaDocLabelsDir(dataset) + "/run" + run + "_iters" + firstIter + "-" + lastIter + jhn.Paths.DOC_LABELS_EXT;
 	}
 	
 	public static String lauDocTopicsDir(String dataset) {

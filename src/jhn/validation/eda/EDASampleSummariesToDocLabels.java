@@ -145,9 +145,12 @@ public class EDASampleSummariesToDocLabels {
 		final int minCount = 2;
 		final String topicWordIdxName = "wp_lucene4";
 		final String datasetName = "sotu_chunks";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
+		final String summarizer = "sum";
 //		final int run = 17;
 //		final int iteration = 95;
-		final int lastN = 10;
+//		final int lastN = 10;
+		final int firstIter = 11;
+		final int lastIter = 50;
 		final int topNlabels = 10;
 		final int runCount = 5;
 		
@@ -157,10 +160,10 @@ public class EDASampleSummariesToDocLabels {
 			String runDir = jhn.eda.Paths.runDir(runsDir, run);
 			
 	//		String fastStateFilename =    Paths.fastStateFilename(run, iteration);
-			String sampleSummaryFilename = jhn.eda.Paths.sampleSummaryFilename(runDir, lastN, minCount);
+			String sampleSummaryFilename = jhn.eda.Paths.sampleSummaryFilename(summarizer, runDir, firstIter, lastIter, minCount);
 			String topicWordIdxDir =      jhn.Paths.topicWordIndexDir("wp_lucene4");
 			String topicMappingFilename = jhn.eda.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
-			String outputFilename =       jhn.validation.Paths.edaDocLabelsFilename(datasetName, lastN, run);
+			String outputFilename =       jhn.validation.Paths.edaDocLabelsFilename(datasetName, firstIter, lastIter, run);
 			
 			generate(sampleSummaryFilename, topicWordIdxDir, topicMappingFilename, outputFilename, topNlabels);
 		}

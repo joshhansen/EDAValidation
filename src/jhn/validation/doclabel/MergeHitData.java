@@ -6,6 +6,7 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.index.IndexReader;
@@ -147,20 +148,12 @@ public class MergeHitData extends Merger<String> {
 		
 		final String edaLabelsDir = jhn.validation.Paths.edaDocLabelsDir(datasetName);
 		final String lauLabelsDir = jhn.validation.Paths.lauDocLabelsDir(datasetName);
-		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir, new FileFilter(){
-			@Override
-			public boolean accept(File pathname) {
-				String name = pathname.getName();
-				return name.startsWith("last10_") && name.endsWith(jhn.Paths.DOC_LABELS_EXT);
-			}
-		});
-		DocLabelSource lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir, new FileFilter(){
-			@Override
-			public boolean accept(File pathname) {
-				String name = pathname.getName();
-				return name.startsWith("lda10topics") && name.endsWith(jhn.Paths.DOC_LABELS_EXT);
-			}
-		});
+		
+		Pattern edaFilenameRgx = Pattern.compile("run(\\d+)_iters\\d+-\\d+\\" + jhn.Paths.DOC_LABELS_EXT);
+		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir, edaFilenameRgx);
+		
+		Pattern lauFilenameRgx = Pattern.compile("lda10topics_(\\d+)\\" + jhn.Paths.DOC_LABELS_EXT);
+		DocLabelSource lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir, lauFilenameRgx);
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
@@ -183,6 +176,8 @@ public class MergeHitData extends Merger<String> {
 			mhd.modelNames.put(rand, "RANDOM");
 			
 			mhd.run();
+			
+			System.out.println(outputFilename);
 		}
 	}
 }
