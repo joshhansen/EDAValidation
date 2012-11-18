@@ -3,13 +3,12 @@ package jhn.validation.doclabel;
 import java.util.Calendar;
 
 import jhn.eda.Paths;
-import jhn.eda.SampleSummarizer;
-import jhn.eda.summarize.ISampleSummarizer;
+import jhn.eda.summarize.SampleSummarizer;
 import jhn.eda.summarize.SumSampleSummarizer;
 
 public class SummarizeSamples {
 	public static void main(String[] args) throws Exception {
-		ISampleSummarizer summarizer = new SumSampleSummarizer();
+		SampleSummarizer summarizer = new SumSampleSummarizer();
 		final long start = Calendar.getInstance().getTimeInMillis();
 		String datasetName = "sotu_chunks";
 		
@@ -23,7 +22,7 @@ public class SummarizeSamples {
 			System.out.println("----- Run " + run + " -----");
 
 			final String runDir = Paths.runDir(runsDir, run);
-			SampleSummarizer.summarize(summarizer, runDir, firstIter, lastIter, minCount);
+			jhn.eda.summarize.SummarizeSamples.summarize(summarizer, runDir, firstIter, lastIter, minCount);
 		}
 		
 		final long stop = Calendar.getInstance().getTimeInMillis();
