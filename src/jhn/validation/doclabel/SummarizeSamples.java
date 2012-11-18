@@ -13,6 +13,7 @@ public class SummarizeSamples {
 		String datasetName = "sotu_chunks";
 		
 		final String runsDir = jhn.validation.Paths.edaRunsDir(datasetName);
+		final boolean includeClass = true;
 		final int runCount = 5;
 		final int firstIter = 10;
 		final int lastIter = 100;
@@ -22,7 +23,7 @@ public class SummarizeSamples {
 			System.out.println("----- Run " + run + " -----");
 
 			final String runDir = Paths.runDir(runsDir, run);
-			jhn.eda.summarize.SummarizeSamples.summarize(summarizer, runDir, firstIter, lastIter, minCount);
+			jhn.eda.summarize.SummarizeSamples.summarize(summarizer, runDir, firstIter, lastIter, minCount, includeClass);
 		}
 		
 		final long stop = Calendar.getInstance().getTimeInMillis();
