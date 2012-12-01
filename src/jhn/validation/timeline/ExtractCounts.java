@@ -10,13 +10,13 @@ import cc.mallet.types.InstanceList;
 
 import jhn.eda.CountsExtractor;
 import jhn.eda.Paths;
-import jhn.eda.topiccounts.LuceneTopicCounts;
-import jhn.eda.topiccounts.TopicCounts;
-import jhn.eda.topictypecounts.LuceneTopicTypeCounts;
-import jhn.eda.topictypecounts.TopicTypeCounts;
-import jhn.eda.typetopiccounts.LuceneTypeTopicCounts;
-import jhn.eda.typetopiccounts.TypeTopicCounts;
 import jhn.util.Util;
+import jhn.wp.topiccounts.LuceneTopicCounts;
+import jhn.wp.topiccounts.TopicCounts;
+import jhn.wp.topictypecounts.LuceneTopicTypeCounts;
+import jhn.wp.topictypecounts.TopicTypeCounts;
+import jhn.wp.typetopiccounts.LuceneTypeTopicCounts;
+import jhn.wp.typetopiccounts.TypeTopicCounts;
 
 public class ExtractCounts implements AutoCloseable {
 	private final String topicWordIdxName;
@@ -38,10 +38,10 @@ public class ExtractCounts implements AutoCloseable {
 		
 		String topicMappingFilename =              Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
 		String propsFilename =                 Paths.propsFilename(topicWordIdxName, datasetName, minCount);
-		String topicCountsFilename =           Paths.topicCountsFilename(topicWordIdxName, datasetName, minCount);
-		String restrictedTopicCountsFilename = Paths.restrictedTopicCountsFilename(topicWordIdxName, datasetName, minCount);
-		String filteredTopicCountsFilename =   Paths.filteredTopicCountsFilename(topicWordIdxName, datasetName, minCount);
-		String typeTopicCountsFilename =       Paths.typeTopicCountsFilename(topicWordIdxName, datasetName, minCount);
+		String topicCountsFilename =           jhn.Paths.topicCountsFilename(topicWordIdxName, datasetName, minCount);
+		String restrictedTopicCountsFilename = jhn.Paths.restrictedTopicCountsFilename(topicWordIdxName, datasetName, minCount);
+		String filteredTopicCountsFilename =   jhn.Paths.filteredTopicCountsFilename(topicWordIdxName, datasetName, minCount);
+		String typeTopicCountsFilename =       jhn.Paths.typeTopicCountsFilename(topicWordIdxName, datasetName, minCount);
 		
 		// Load
 		InstanceList targetData = InstanceList.load(new File(datasetFilename));
