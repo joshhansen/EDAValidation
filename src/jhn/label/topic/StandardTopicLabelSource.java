@@ -19,8 +19,7 @@ import jhn.util.RandUtil;
  *     topicNum,word1,word2,...,wordN,"label"
  * etc.
  */
-public class StandardTopicLabelSource implements TopicLabelSource, BareLabelSource {
-
+public class StandardTopicLabelSource implements SampleableTopicLabelSource, BareLabelSource {
 	private static final Pattern rgx = Pattern.compile("([^,]+),(.+),\"([^\"]+)\"");
 	private Int2ObjectMap<String> labels = new Int2ObjectOpenHashMap<>();
 	private Int2ObjectMap<String[]> topicWords = new Int2ObjectOpenHashMap<>();
@@ -60,6 +59,11 @@ public class StandardTopicLabelSource implements TopicLabelSource, BareLabelSour
 	
 	public String[] topicWords(int topicNum) {
 		return topicWords.get(topicNum);
+	}
+
+	@Override
+	public int randTopicNum() {
+		return RandUtil.randItem(labels.keySet().toIntArray());
 	}
 
 }
