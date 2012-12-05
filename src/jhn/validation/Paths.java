@@ -60,16 +60,16 @@ public class Paths {
 		return lauDocLabelsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.DOC_LABELS_EXT;
 	}
 	
-	public static String edaRunsDir(String dataset) {
-		return outputDir(dataset) + "/eda_runs";
+	public static String edaRunsDir(Class<? extends EDA> algo, String dataset) {
+		return outputDir(algo, dataset) + "/runs";
 	}
 	
-	public static String edaDocLabelsDir(String dataset) {
-		return outputDir(dataset) + "/eda_doc_labels";
+	public static String edaDocLabelsDir(Class<? extends EDA> algo, String dataset) {
+		return outputDir(algo, dataset) + "/doc_labels";
 	}
 	
-	public static String edaDocLabelsFilename(String dataset, int firstIter, int lastIter, int run) {
-		return edaDocLabelsDir(dataset) + "/run" + run + "_iters" + firstIter + "-" + lastIter + jhn.Paths.DOC_LABELS_EXT;
+	public static String edaDocLabelsFilename(Class<? extends EDA> algo, String dataset, int firstIter, int lastIter, int run) {
+		return edaDocLabelsDir(algo, dataset) + "/run" + run + "_iters" + firstIter + "-" + lastIter + jhn.Paths.DOC_LABELS_EXT;
 	}
 	
 	public static String lauDocTopicsDir(String dataset) {

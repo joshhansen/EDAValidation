@@ -22,6 +22,8 @@ import jhn.counts.Counter;
 import jhn.counts.i.i.IntIntCounter;
 import jhn.counts.i.i.i.IntIntIntCounterMap;
 import jhn.counts.i.i.i.IntIntIntRAMCounterMap;
+import jhn.eda.EDA;
+import jhn.eda.EDA2;
 import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.idx.IntIndex;
 import jhn.util.Util;
@@ -142,6 +144,7 @@ public class EDASampleSummariesToDocLabels {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		Class<? extends EDA> algo = EDA2.class;
 		final int minCount = 2;
 		final String topicWordIdxName = "wp_lucene4";
 		final String datasetName = "sotu_chunks";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
@@ -154,7 +157,7 @@ public class EDASampleSummariesToDocLabels {
 		final int topNlabels = 10;
 		final int runCount = 5;
 		
-		final String runsDir = jhn.validation.Paths.edaRunsDir(datasetName);// jhn.validation.Paths.outputDir()+"/doclabel/" + datasetName;
+		final String runsDir = jhn.validation.Paths.edaRunsDir(algo, datasetName);
 		
 		for(int run = 0; run < runCount; run++) {
 			String runDir = jhn.eda.Paths.runDir(runsDir, run);
@@ -163,7 +166,7 @@ public class EDASampleSummariesToDocLabels {
 			String sampleSummaryFilename = jhn.eda.Paths.sampleSummaryFilename(summarizer, runDir, firstIter, lastIter, minCount);
 			String topicWordIdxDir =      jhn.Paths.topicWordIndexDir("wp_lucene4");
 			String topicMappingFilename = jhn.eda.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
-			String outputFilename =       jhn.validation.Paths.edaDocLabelsFilename(datasetName, firstIter, lastIter, run);
+			String outputFilename =       jhn.validation.Paths.edaDocLabelsFilename(algo, datasetName, firstIter, lastIter, run);
 			
 			generate(sampleSummaryFilename, topicWordIdxDir, topicMappingFilename, outputFilename, topNlabels);
 		}
