@@ -3,17 +3,21 @@ package jhn.validation.doclabel;
 import java.io.File;
 
 import jhn.eda.EDA;
+import jhn.eda.EDA1;
 import jhn.eda.listeners.PrintFastState;
 
 public class RunEDA extends jhn.eda.RunEDA {
 	private static final int PRINT_INTERVAL = 1;
 	protected int runCount;
-	public RunEDA(String datasetName, int runCount, int iterations, int minCount) {
+	public RunEDA(Class<? extends EDA> algo, String datasetName, int runCount, int iterations, int minCount, boolean outputClass) {
+		super();
+		this.algo = algo;
 		this.datasetName = datasetName;
-		this.runsDir = jhn.validation.Paths.edaRunsDir(datasetName);
+		this.runsDir = jhn.validation.Paths.edaRunsDir(algo, datasetName);
 		this.runCount = runCount;
 		this.iterations = iterations;
 		this.minCount = minCount;
+		this.outputClass = outputClass;
 		
 		new File(this.runsDir).mkdirs();
 	}
@@ -30,9 +34,9 @@ public class RunEDA extends jhn.eda.RunEDA {
 	}
 	
 	@Override
-	protected void addListeners(EDA eda) {
+	protected void addListeners(EDA eda) throws NoSuchMethodException, SecurityException {
 //		eda.addListener(new PrintState(PRINT_INTERVAL, runDir()));
-		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir()));
+		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir(), outputClass));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir(), false));
 //		eda.addListener(new PrintDocTopics(PRINT_INTERVAL, runDir()));
@@ -42,11 +46,13 @@ public class RunEDA extends jhn.eda.RunEDA {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		final String datasetName = "sotu_chunks";
+		Class<? extends EDA> algo = EDA1.class;
+		final String datasetName = "reuters21578_noblah2";
+		final boolean outputClass = true;
 		final int iterations = 50;
 		final int runCount = 5;
 		final int minCount = 2;
-		RunEDA runner = new RunEDA(datasetName, runCount, iterations, minCount);
+		RunEDA runner = new RunEDA(algo, datasetName, runCount, iterations, minCount, outputClass);
 		runner.run();
 	}
 
