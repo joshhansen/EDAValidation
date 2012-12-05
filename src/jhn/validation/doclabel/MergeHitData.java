@@ -2,13 +2,11 @@ package jhn.validation.doclabel;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 
@@ -16,9 +14,8 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.LabelAlphabet;
 
-import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-
+import jhn.eda.EDA;
+import jhn.eda.EDA2;
 import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.label.LabelSource;
 import jhn.label.doc.DocLabelSource;
@@ -32,7 +29,6 @@ import jhn.validation.Merger;
 public class MergeHitData extends Merger<String> {
 	private final String[] docFilenames;
 	private final int chooseFromTopN;
-	private Reference2ObjectMap<LabelSource<String>,String> modelNames = new Reference2ObjectOpenHashMap<>();
 	
 	public MergeHitData(String datasetName, int comparisons, String destFilename, int chooseFromTopN) {
 		super(comparisons, destFilename);
@@ -70,10 +66,6 @@ public class MergeHitData extends Merger<String> {
 		return "http://en.wikipedia.org/wiki/" + label.replace(" ", "_");
 	}
 	
-	private static String cleanLabel(String label) {
-		return StringUtils.capitalize(label.trim());
-	}
-	
 	protected String randKey() {
 		return RandUtil.randItem(docFilenames);
 	}
@@ -97,24 +89,22 @@ public class MergeHitData extends Merger<String> {
 		
 		System.out.println("Filename: " + docFilename);
 		
-		System.out.println(modelNames.get(src1));
+		System.out.println(modelName(src1));
 		String[] labels1 = src1.labels(docFilename, chooseFromTopN);
-		System.out.println(modelNames.get(src2));
+		System.out.println(modelName(src2));
 		String[] labels2 = src2.labels(docFilename, chooseFromTopN);
 		String label1 = cleanLabel(RandUtil.randItem(labels1));
 		String label2 = cleanLabel(RandUtil.randItem(labels2));
 		
-		StringBuilder w = new StringBuilder();
-		w.append(modelNames.get(src1)).append(',').append(modelNames.get(src2));
-		w.append(',');
-		w.append(docFilename);
-		w.append(",\"").append(docText).append("\"");
-		w.append(",\"").append(label1).append("\"");
-		w.append(",\"").append(wpLinkify(label1)).append("\"");
-		w.append(",\"").append(label2).append("\"");
-		w.append(",\"").append(wpLinkify(label2)).append("\"");
-		
-		return w.toString();
+		return new StringBuilder()
+		.append(modelName(src1)).append(',').append(modelName(src2))
+		.append(',')
+		.append(docFilename)
+		.append(",\"").append(docText).append("\"")
+		.append(",\"").append(label1).append("\"")
+		.append(",\"").append(wpLinkify(label1)).append("\"")
+		.append(",\"").append(label2).append("\"")
+		.append(",\"").append(wpLinkify(label2)).append("\"").toString();
 	}
 
 	@Override
@@ -140,40 +130,37 @@ public class MergeHitData extends Merger<String> {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		Class<? extends EDA> algo = EDA2.class;
 //		final String datasetName = "toy_dataset4";
-		final String datasetName = "sotu_chunks";
+		final String datasetName = "reuters21578_noblah2";
 		String topicWordIdxDir = jhn.Paths.topicWordIndexDir("wp_lucene4");
 		final int numComparisons = 200;
 		final int chooseFromTopN = 1;
 		
-		final String edaLabelsDir = jhn.validation.Paths.edaDocLabelsDir(datasetName);
+		final String edaLabelsDir = jhn.validation.Paths.edaDocLabelsDir(algo, datasetName);
 		final String lauLabelsDir = jhn.validation.Paths.lauDocLabelsDir(datasetName);
 		
 		Pattern edaFilenameRgx = Pattern.compile("run(\\d+)_iters\\d+-\\d+\\" + jhn.Paths.DOC_LABELS_EXT);
-		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir, edaFilenameRgx);
+		LabelSource<String> eda = new RandomRunsDocLabelSource(edaLabelsDir, edaFilenameRgx);
 		
 		Pattern lauFilenameRgx = Pattern.compile("lda10topics_(\\d+)\\" + jhn.Paths.DOC_LABELS_EXT);
-		DocLabelSource lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir, lauFilenameRgx);
+		LabelSource<String> lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir, lauFilenameRgx);
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelAlphabet labels = new LuceneLabelAlphabet(topicWordIdx);
 			DocLabelSource rand = new RandomDocLabelsSource(labels);
 			
-			File outputDir = new File(jhn.validation.Paths.hitDataDir(datasetName));
+			File outputDir = new File(jhn.validation.Paths.hitDataDir(algo, datasetName));
 			if(!outputDir.exists()) {
 				outputDir.mkdirs();
 			}
 			
-			String outputFilename = jhn.validation.Paths.mergedDocLabelsFilename(datasetName, numComparisons, chooseFromTopN);
+			String outputFilename = jhn.validation.Paths.mergedDocLabelsFilename(algo, datasetName, numComparisons, chooseFromTopN);
 			
 			MergeHitData mhd = new MergeHitData(datasetName, numComparisons, outputFilename, chooseFromTopN);
-			mhd.setModelProportion(eda, 0.45);
-			mhd.setModelProportion(lauEtAl, 0.45);
-			mhd.setModelProportion(rand, 0.1);
-			
-			mhd.modelNames.put(eda, "EDA");
-			mhd.modelNames.put(lauEtAl, "LAU_ET_AL");
-			mhd.modelNames.put(rand, "RANDOM");
+			mhd.addModel(eda, "EDA", 0.45);
+			mhd.addModel(lauEtAl, "LAU_ET_AL", 0.45);
+			mhd.addModel(rand, "RANDOM", 0.1);
 			
 			mhd.run();
 			

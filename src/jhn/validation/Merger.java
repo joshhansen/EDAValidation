@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
+import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+
 import jhn.counts.d.DoubleCounter;
 import jhn.counts.d.o.ObjDoubleCounter;
 import jhn.label.LabelSource;
@@ -20,6 +25,7 @@ public abstract class Merger<K> {
 	private final int comparisons;
 	protected final String destFilename;
 	private DoubleCounter<LabelSource<K>> modelProportions = new ObjDoubleCounter<>();
+	private Reference2ObjectMap<LabelSource<K>,String> modelNames = new Reference2ObjectOpenHashMap<>();
 	
 	public Merger(int comparisons, String destFilename) {
 		this.comparisons = comparisons;
@@ -34,8 +40,21 @@ public abstract class Merger<K> {
 		}
 	}
 	
-	protected void setModelProportion(LabelSource<K> model, double proportion) {
+	protected void addModel(LabelSource<K> model, String name, double proportion) {
 		modelProportions.set(model, proportion);
+		modelNames.put(model, name);
+	}
+	
+	protected String modelName(LabelSource<K> model) {
+		return modelNames.get(model);
+	}
+	
+	protected double modelProportion(LabelSource<K> model) {
+		return modelProportions.getCountD(model);
+	}
+	
+	protected static String cleanLabel(String label) {
+		return StringUtils.capitalize(label.trim());
 	}
 
 	protected static List<String> randomize(List<String> output) {
