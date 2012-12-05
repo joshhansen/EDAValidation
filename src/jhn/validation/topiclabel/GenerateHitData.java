@@ -1,9 +1,7 @@
 package jhn.validation.topiclabel;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +17,9 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap.Entry;
 import jhn.counts.i.i.IntIntCounter;
 import jhn.counts.i.i.IntIntRAMCounter;
 import jhn.eda.Paths;
+import jhn.eda.io.FastStateFileReader;
 import jhn.eda.lucene.LuceneLabelAlphabet;
+import jhn.eda.tokentopics.DocTokenTopics;
 import jhn.idx.IntIndex;
 import jhn.util.Util;
 import jhn.wp.Fields;
@@ -28,24 +28,38 @@ public class GenerateHitData {
 	private static IntIntCounter topicCounts(String fastStateFilename) throws Exception {
 		IntIntCounter counts = new IntIntRAMCounter();
 		
-		try(BufferedReader r = new BufferedReader(new FileReader(fastStateFilename))) {
+		try(FastStateFileReader r = new FastStateFileReader(fastStateFilename)) {
 			int lineNum = 0;
-			String tmp = null;
-			while( (tmp=r.readLine()) != null) {
-				if(!tmp.startsWith("#")) {
-					String[] parts = tmp.split("\\s+");
-					for(int i = 3; i < parts.length; i++) {
-						counts.inc(Integer.parseInt(parts[i]));
-					}
-					
-					lineNum++;
-					System.out.print('.');
-					if(lineNum > 0 && lineNum % 120 == 0) {
-						System.out.println(lineNum);
-					}
+			for(DocTokenTopics dtt : r) {
+				while(dtt.hasNext()) {
+					counts.inc(dtt.nextInt());
 				}
+				lineNum++;
+			}
+			
+			System.out.print('.');
+			if(lineNum > 0 && lineNum % 120 == 0) {
+				System.out.println(lineNum);
 			}
 		}
+//		try(BufferedReader r = new BufferedReader(new FileReader(fastStateFilename))) {
+//			int lineNum = 0;
+//			String tmp = null;
+//			while( (tmp=r.readLine()) != null) {
+//				if(!tmp.startsWith("#")) {
+//					String[] parts = tmp.split("\\s+");
+//					for(int i = 3; i < parts.length; i++) {
+//						counts.inc(Integer.parseInt(parts[i]));
+//					}
+//					
+//					lineNum++;
+//					System.out.print('.');
+//					if(lineNum > 0 && lineNum % 120 == 0) {
+//						System.out.println(lineNum);
+//					}
+//				}
+//			}
+//		}
 		
 		return counts;
 	}
