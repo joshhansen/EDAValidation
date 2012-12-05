@@ -3,6 +3,8 @@ package jhn.validation;
 import java.util.regex.Pattern;
 
 public class Paths {
+	public static final String HIT_EXT = ".hit.csv";
+	
 	public static String outputDir() {
 		return jhn.Paths.outputDir("EDAValidation");
 	}
