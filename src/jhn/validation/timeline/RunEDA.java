@@ -24,7 +24,7 @@ public class RunEDA extends jhn.eda.RunEDA {
 	}
 	
 	@Override
-	protected void addListeners(EDA eda) {
+	protected void addListeners(EDA eda) throws NoSuchMethodException, SecurityException {
 		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir()));
 	}
 
