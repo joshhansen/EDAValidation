@@ -13,7 +13,6 @@ import jhn.lauetal.tc.HTTPTitleChecker;
 import jhn.lauetal.tc.LuceneTitleChecker;
 import jhn.lauetal.tc.OrderedTitleChecker;
 import jhn.lauetal.tc.TitleChecker;
-import jhn.lauetal.ts.GoogleTitleSearcher;
 import jhn.lauetal.ts.LuceneTitleSearcher;
 import jhn.lauetal.ts.MediawikiTitleSearcher;
 import jhn.lauetal.ts.OrderedTitleSearcher;

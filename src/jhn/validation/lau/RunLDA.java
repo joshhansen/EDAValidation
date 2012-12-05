@@ -9,8 +9,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import jhn.validation.Paths;
-
 public class RunLDA {
 	/** 
 	 * Reads everything from an InputStream and writes it to an OutputStream (includes System.out and System.err) until
