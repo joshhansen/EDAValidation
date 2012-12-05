@@ -40,21 +40,23 @@ public final class TopicLabelMerge extends CalibrationMerge<Integer> {
 		
 		
 		final String[] sides = new String[]{"1","2"};
-		for(String side : sides) {
+		for(int i = 0; i < sides.length; i++) {
+			String side = sides[i];
 			header.append("topicCount").append(side).append(',');
 			header.append("run").append(side).append(',');
 			header.append("topic").append(side).append(',');
-			header.append("topic").append(side).append("label,");
+			header.append("model").append(side).append("label");
+			if(i < sides.length - 1) header.append(',');
 		}
 		
 		for(int i = 0; i < sides.length; i++) {
 			String side = sides[i];
 			
 			for(int wordNum = 0; wordNum < 20; wordNum++) {
-				header.append("model").append(side).append("word").append(String.valueOf(wordNum)).append(',');
+				header.append(",model").append(side).append("word").append(String.valueOf(wordNum));
 			}
-			header.append("model").append(side).append("label");
-			if(i < sides.length - 1) header.append(',');
+//			header.append("model").append(side).append("label");
+//			if(i < sides.length - 1) header.append(',');
 		}
 		return header.toString();
 	}
@@ -103,8 +105,8 @@ public final class TopicLabelMerge extends CalibrationMerge<Integer> {
 	
 	public static void main(String[] args) throws Exception {
 		final int comparisonsPerPair = 10;
-//		String datasetName = "reuters21578";
-		String datasetName = "state_of_the_union";
+//		String datasetName = "reuters21578_noblah2";
+		String datasetName = "sotu_chunks";
 		CalibrationMerge<Integer> tccm = new TopicLabelMerge(datasetName, comparisonsPerPair);
 		tccm.run();
 	}
