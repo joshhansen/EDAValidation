@@ -2,6 +2,9 @@ package jhn.validation;
 
 import java.util.regex.Pattern;
 
+import jhn.eda.EDA;
+import jhn.esa.ESA;
+
 public class Paths {
 	public static final String HIT_EXT = ".hit.csv";
 	
@@ -11,6 +14,10 @@ public class Paths {
 	
 	public static String outputDir(String dataset) {
 		return outputDir() + "/" + dataset;
+	}
+	
+	public static String outputDir(Class<?> algo, String dataset) {
+		return outputDir() + "/" + dataset + "/" + algo.getSimpleName();
 	}
 	
 	public static String mergedLauTopicLabelsFilename(String dataset) {
@@ -86,11 +93,35 @@ public class Paths {
 		return outputDir(dataset) + "/hit_data";
 	}
 	
-	public static String mergedDocLabelsFilename(String dataset, int numComparisons, int chooseFromTopN) {
-		return hitDataDir(dataset) + "/merged_document_labels"
+	public static String hitDataDir(Class<? extends EDA> algo, String dataset) {
+		return outputDir(algo, dataset) + "/hit_data";
+	}
+	
+	public static String libSvmDir(Class<?> algo, String dataset) {
+		return outputDir(algo, dataset) + "/libsvm";
+	}
+	
+	public static String edaLibSvmFilename(Class<? extends EDA> algo, String dataset, String summarizerName, int run, int start, int stop, int minCount, boolean includesClass) {
+		return libSvmDir(algo, dataset) + "/" + jhn.eda.Paths.sampleSummaryKey(summarizerName, start, stop, minCount, includesClass) + "_" + run + jhn.Paths.LIBSVM_EXT;
+	}
+	
+	public static String esaLibSvmFilename(String topicWordIdx, String dataset, int topN) {
+		return libSvmDir(ESA.class, dataset) + "/" + topicWordIdx + ":" + dataset + "_top" + topN + jhn.Paths.LIBSVM_EXT;
+	}
+	
+	public static String mergedDocLabelsFilename(Class<? extends EDA> algo, String dataset, int numComparisons, int chooseFromTopN) {
+		return hitDataDir(algo, dataset) + "/merged_document_labels"
 			+ "_" + dataset
 			+ "_cmps" + numComparisons
 			+ "_n" + chooseFromTopN
-			+ "_6.hit.csv";
+			+ "_3" + HIT_EXT;
+	}
+	
+	public static String mergedTopicLabelsFilename(String dataset, int numComparisons, int chooseFromTopN) {
+		return hitDataDir(dataset) + "/merged_topic_labels"
+			+ "_" + dataset
+			+ "_cmps" + numComparisons
+			+ "_n" + chooseFromTopN
+			+ HIT_EXT;
 	}
 }
