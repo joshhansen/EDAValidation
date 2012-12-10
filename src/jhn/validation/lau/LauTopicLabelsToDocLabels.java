@@ -2,12 +2,10 @@ package jhn.validation.lau;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.regex.Matcher;
 
+import jhn.io.DocLabelsFileWriter;
 import jhn.label.topic.StandardTopicLabelSource;
 import jhn.label.topic.TopicLabelSource;
 
@@ -16,7 +14,7 @@ import jhn.label.topic.TopicLabelSource;
  *
  */
 public class LauTopicLabelsToDocLabels {
-	public static void generate(String datasetName, String docTopicsDir) throws FileNotFoundException, IOException {
+	public static void generate(String datasetName, String docTopicsDir) throws Exception {
 		System.out.println(docTopicsDir);
 		for(File docTopicsFile : new File(docTopicsDir).listFiles()) {
 			System.out.println("\t"+docTopicsFile);
@@ -33,35 +31,40 @@ public class LauTopicLabelsToDocLabels {
 			
 			String outputFilename = jhn.validation.Paths.lauDocLabelsFilename(datasetName, topicCount, run);
 			
+			
+			
 			try(BufferedReader r = new BufferedReader(new FileReader(docTopicsFile));
-					PrintWriter w = new PrintWriter(outputFilename)) {
+					DocLabelsFileWriter w = new DocLabelsFileWriter(outputFilename)) {
 				
-				w.println("#docNum,filename,label1,label2,label3,label4,label5,label6,label7,label8,label9,label10");
+//				w.println("#docNum,filename,label1,label2,label3,label4,label5,label6,label7,label8,label9,label10");
 				
 				String line;
 				while( (line=r.readLine()) != null) {
 					if(!line.startsWith("#")) {
 						String[] parts = line.split("\t");
-						w.print(parts[0]);//docNum
-						w.print(',');
-						w.print(parts[1]);//filename
+						w.startDocument(Integer.parseInt(parts[0]), parts[1]);
+//						w.print(parts[0]);//docNum
+//						w.print(',');
+//						w.print(parts[1]);//filename
 						
 						// Labels:
 						for(int i = 2; i < parts.length; i += 2) {
 							int topicNum = Integer.parseInt(parts[i]);
-							w.print(',');
-							w.print('"');
-							w.print(tls.labels(topicNum, 1)[0]);
-							w.print('"');
+							w.label(tls.labels(topicNum, 1)[0]);
+//							w.print(',');
+//							w.print('"');
+//							w.print(tls.labels(topicNum, 1)[0]);
+//							w.print('"');
 						}
-						w.println();
+//						w.println();
+						w.endDocument();
 					}
 				}
 			}
 		}
 	}
 	
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws Exception {
 		String datasetName = "reuters21578_noblah";
 		String docTopicsDir = jhn.validation.Paths.lauDocTopicsDir(datasetName);
 		generate(datasetName, docTopicsDir);
