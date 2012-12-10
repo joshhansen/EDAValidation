@@ -7,6 +7,7 @@ import jhn.esa.ESA;
 
 public class Paths {
 	public static final String HIT_EXT = ".hit.csv";
+	public static final String TOP_TOPICS_EXT = ".top_topics";
 	
 	public static String outputDir() {
 		return jhn.Paths.outputDir("EDAValidation");
@@ -123,5 +124,9 @@ public class Paths {
 			+ "_cmps" + numComparisons
 			+ "_n" + chooseFromTopN
 			+ HIT_EXT;
+	}
+	
+	public static String topTopicsFilename(Class<? extends EDA> algo, String dataset) {
+		return outputDir(algo, dataset) + "/top_topics" + TOP_TOPICS_EXT;
 	}
 }
