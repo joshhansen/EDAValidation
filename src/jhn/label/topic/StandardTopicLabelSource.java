@@ -46,6 +46,7 @@ public class StandardTopicLabelSource implements SampleableTopicLabelSource, Bar
 		return labels(RandUtil.randItem(labels.keySet()), numLabels);
 	}
 	
+	@Override
 	public String[] topicWords(int topicNum) {
 		return topicWords.get(topicNum);
 	}
