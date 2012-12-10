@@ -149,7 +149,7 @@ public class GenerateHitData {
 		
 		String fastStateFilename =    Paths.fastStateFilename(runDir, iteration);
 		String topicWordIdxDir =      jhn.Paths.topicWordIndexDir("wp_lucene4");
-		String topicMappingFilename = Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
+		String topicMappingFilename = jhn.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
 		String outputFilename =       Paths.topicLabelHitDataFilename(runDir, iteration);
 		
 		generate(fastStateFilename, topicWordIdxDir, topicMappingFilename, outputFilename);

@@ -9,7 +9,6 @@ import cc.mallet.types.Alphabet;
 import cc.mallet.types.InstanceList;
 
 import jhn.eda.CountsExtractor;
-import jhn.eda.Paths;
 import jhn.eda.topiccounts.LuceneTopicCounts;
 import jhn.eda.topiccounts.TopicCounts;
 import jhn.eda.topictypecounts.LuceneTopicTypeCounts;
@@ -36,8 +35,8 @@ public class ExtractCounts implements AutoCloseable {
 		
 		System.out.println("Extracting " + datasetName);
 		
-		String topicMappingFilename =              Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
-		String propsFilename =                 Paths.propsFilename(topicWordIdxName, datasetName, minCount);
+		String topicMappingFilename =              jhn.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
+		String propsFilename =                 jhn.Paths.propsFilename(topicWordIdxName, datasetName, minCount);
 		String topicCountsFilename =           jhn.Paths.topicCountsFilename(topicWordIdxName, datasetName, minCount);
 		String restrictedTopicCountsFilename = jhn.Paths.restrictedTopicCountsFilename(topicWordIdxName, datasetName, minCount);
 		String filteredTopicCountsFilename =   jhn.Paths.filteredTopicCountsFilename(topicWordIdxName, datasetName, minCount);
