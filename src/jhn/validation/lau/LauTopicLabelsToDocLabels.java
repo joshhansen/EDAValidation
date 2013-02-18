@@ -35,28 +35,17 @@ public class LauTopicLabelsToDocLabels {
 			
 			try(BufferedReader r = new BufferedReader(new FileReader(docTopicsFile));
 					DocLabelsFileWriter w = new DocLabelsFileWriter(outputFilename)) {
-				
-//				w.println("#docNum,filename,label1,label2,label3,label4,label5,label6,label7,label8,label9,label10");
-				
 				String line;
 				while( (line=r.readLine()) != null) {
 					if(!line.startsWith("#")) {
 						String[] parts = line.split("\t");
 						w.startDocument(Integer.parseInt(parts[0]), parts[1]);
-//						w.print(parts[0]);//docNum
-//						w.print(',');
-//						w.print(parts[1]);//filename
 						
 						// Labels:
 						for(int i = 2; i < parts.length; i += 2) {
 							int topicNum = Integer.parseInt(parts[i]);
 							w.label(tls.labels(topicNum, 1)[0]);
-//							w.print(',');
-//							w.print('"');
-//							w.print(tls.labels(topicNum, 1)[0]);
-//							w.print('"');
 						}
-//						w.println();
 						w.endDocument();
 					}
 				}
