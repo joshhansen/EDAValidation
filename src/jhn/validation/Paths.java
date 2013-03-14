@@ -90,9 +90,9 @@ public class Paths {
 		return lauDocTopicsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.DOCTOPICS_EXT;
 	}
 	
-	public static String hitDataDir(String dataset) {
-		return outputDir(dataset) + "/hit_data";
-	}
+//	public static String hitDataDir(String dataset) {
+//		return outputDir(dataset) + "/hit_data";
+//	}
 	
 	public static String hitDataDir(Class<? extends EDA> algo, String dataset) {
 		return outputDir(algo, dataset) + "/hit_data";
@@ -118,8 +118,8 @@ public class Paths {
 			+ "_3" + HIT_EXT;
 	}
 	
-	public static String mergedTopicLabelsFilename(String dataset, int numComparisons, int chooseFromTopN) {
-		return hitDataDir(dataset) + "/merged_topic_labels"
+	public static String mergedTopicLabelsFilename(Class<? extends EDA> algo, String dataset, int numComparisons, int chooseFromTopN) {
+		return hitDataDir(algo, dataset) + "/merged_topic_labels"
 			+ "_" + dataset
 			+ "_cmps" + numComparisons
 			+ "_n" + chooseFromTopN
@@ -128,5 +128,9 @@ public class Paths {
 	
 	public static String topTopicsFilename(Class<? extends EDA> algo, String dataset) {
 		return outputDir(algo, dataset) + "/top_topics" + TOP_TOPICS_EXT;
+	}
+	
+	public static String topTopicsFilename(Class<? extends EDA> algo, String dataset, int run) {
+		return outputDir(algo, dataset) + "/runs/" + run + "/top_topics" + TOP_TOPICS_EXT;
 	}
 }
