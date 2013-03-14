@@ -4,7 +4,9 @@ import java.io.File;
 
 import jhn.eda.EDA;
 import jhn.eda.EDA1;
-import jhn.eda.listeners.PrintFastState;
+import jhn.eda.EDA2;
+import jhn.eda.EDA2_1;
+import jhn.eda.listeners.PrintFasterState;
 
 public class RunEDA extends jhn.eda.RunEDA {
 	private static final int PRINT_INTERVAL = 1;
@@ -36,7 +38,8 @@ public class RunEDA extends jhn.eda.RunEDA {
 	@Override
 	protected void addListeners(EDA eda) throws NoSuchMethodException, SecurityException {
 //		eda.addListener(new PrintState(PRINT_INTERVAL, runDir()));
-		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir(), outputClass));
+//		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir(), outputClass));
+		eda.addListener(new PrintFasterState(PRINT_INTERVAL, runDir(), outputClass));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir(), false));
 //		eda.addListener(new PrintDocTopics(PRINT_INTERVAL, runDir()));
@@ -46,8 +49,11 @@ public class RunEDA extends jhn.eda.RunEDA {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Class<? extends EDA> algo = EDA1.class;
-		final String datasetName = "reuters21578_noblah2";
+//		Class<? extends EDA> algo = EDA2.class;
+		Class<? extends EDA> algo = EDA2_1.class;
+//		final String datasetName = "reuters21578_noblah2";
+		final String datasetName = "sotu_chunks";
+//		final String datasetName = "toy_dataset4";
 		final boolean outputClass = true;
 		final int iterations = 50;
 		final int runCount = 5;

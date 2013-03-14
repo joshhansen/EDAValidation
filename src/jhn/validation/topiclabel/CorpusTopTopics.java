@@ -8,6 +8,8 @@ import jhn.counts.i.i.IntIntCounter;
 import jhn.counts.i.i.IntIntRAMCounter;
 import jhn.eda.EDA;
 import jhn.eda.EDA1;
+import jhn.eda.EDA2;
+import jhn.eda.EDA2_1;
 import jhn.eda.Paths;
 import jhn.eda.io.SampleSummaryFileReader;
 import jhn.eda.summarize.SampleSummarizer;
@@ -17,18 +19,21 @@ import jhn.io.TopTopicsWriter;
 
 public class CorpusTopTopics {
 	public static void main(String[] args) throws Exception {
-		Class<? extends EDA> algo = EDA1.class;
+//		Class<? extends EDA> algo = EDA1.class;
+//		Class<? extends EDA> algo = EDA2.class;
+		Class<? extends EDA> algo = EDA2_1.class;
 		SampleSummarizer summarizer = new SumSampleSummarizer();
-		String datasetName = "reuters21578_noblah2";
+//		String datasetName = "reuters21578_noblah2";
 //		String datasetName = "sotu_chunks";
+		String datasetName = "toy_dataset4";
 		
 		final String runsDir = jhn.validation.Paths.edaRunsDir(algo, datasetName);
-		final int topicCount = 1000;
+		final int topicCount = 100;
 		final boolean includeClass = true;
-		final int runCount = 5;
-		final int firstIter = 11;
+		final int runCount = 1;
+		final int firstIter = 31;
 		final int lastIter = 50;
-		final int minCount = 2;
+		final int minCount = 0;
 		
 		IntIntCounter topicCounts = new IntIntRAMCounter();
 		for(int run = 0; run < runCount; run++) {

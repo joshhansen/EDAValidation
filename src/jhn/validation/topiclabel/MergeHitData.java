@@ -9,7 +9,9 @@ import org.apache.lucene.store.FSDirectory;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
+import jhn.eda.EDA;
 import jhn.eda.EDA1;
+//import jhn.eda.EDA2;
 import jhn.idx.IntIndex;
 import jhn.io.TopTopicsReader;
 import jhn.label.LabelSource;
@@ -94,11 +96,13 @@ public class MergeHitData extends Merger<Integer> {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		final int topicCount = 10;
+		final Class<? extends EDA> algo = EDA1.class;
+//		final Class<? extends EDA> algo = EDA2.class;
+		final int topicCount = 20;
 		final String topicWordIdxName = "wp_lucene4";
 //		final String datasetName = "toy_dataset4";
-//		final String datasetName = "reuters21578_noblah2";
-		String datasetName = "sotu_chunks";
+		final String datasetName = "reuters21578_noblah2";
+//		String datasetName = "sotu_chunks";
 		String topicWordIdxDir = jhn.Paths.topicWordIndexDir(topicWordIdxName);
 		final int numComparisons = 200;
 		final int chooseFromTopN = 1;
@@ -110,7 +114,7 @@ public class MergeHitData extends Merger<Integer> {
 //		Pattern edaFilenameRgx = Pattern.compile("run(\\d+)_iters\\d+-\\d+\\" + jhn.Paths.DOC_LABELS_EXT);
 //		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir, edaFilenameRgx);
 		IntSet allowedTopics = null;
-		try(TopTopicsReader r = new TopTopicsReader(Paths.topTopicsFilename(EDA1.class, datasetName))) {
+		try(TopTopicsReader r = new TopTopicsReader(Paths.topTopicsFilename(algo, datasetName))) {
 			allowedTopics = r.readTopicsSet(100);
 		}
 		
@@ -132,15 +136,15 @@ public class MergeHitData extends Merger<Integer> {
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
 			LabelSource<Integer> random = new RestrictedRandomTopicLabelSource(topicWordIdx, datasetName, actuallyAllowedTopics);
 			
-			File outputDir = new File(jhn.validation.Paths.hitDataDir(datasetName));
+			File outputDir = new File(jhn.validation.Paths.hitDataDir(algo, datasetName));
 			if(!outputDir.exists()) {
 				outputDir.mkdirs();
 			}
 			
-			String outputFilename = jhn.validation.Paths.mergedTopicLabelsFilename(datasetName, numComparisons, chooseFromTopN) + ".restricted";
+			String outputFilename = jhn.validation.Paths.mergedTopicLabelsFilename(algo, datasetName, numComparisons, chooseFromTopN) + ".2.restricted";
 			
 			MergeHitData mhd = new MergeHitData(numComparisons, outputFilename, chooseFromTopN);
-			mhd.addModel(eda, "EDA", 0.45);
+			mhd.addModel(eda, algo.getSimpleName(), 0.45);
 			mhd.addModel(lauEtAl, "LAU_ET_AL", 0.45);
 			mhd.addModel(random, "RANDOM", 0.1);
 			
