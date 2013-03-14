@@ -158,7 +158,7 @@ public class MergeHitData extends Merger<String> {
 			String outputFilename = jhn.validation.Paths.mergedDocLabelsFilename(algo, datasetName, numComparisons, chooseFromTopN);
 			
 			MergeHitData mhd = new MergeHitData(datasetName, numComparisons, outputFilename, chooseFromTopN);
-			mhd.addModel(eda, "EDA", 0.45);
+			mhd.addModel(eda, algo.getSimpleName(), 0.45);
 			mhd.addModel(lauEtAl, "LAU_ET_AL", 0.45);
 			mhd.addModel(rand, "RANDOM", 0.1);
 			
