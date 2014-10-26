@@ -9,7 +9,7 @@ import jhn.eda.EDA;
 import jhn.eda.listeners.PrintFasterState;
 
 public class RunEDA extends jhn.eda.RunEDA {
-	private static final int PRINT_INTERVAL = 1;
+	private static final int PRINT_STATE_INTERVAL = 10;
 	protected int runCount;
 	public RunEDA(Class<? extends ProbabilisticExplicitTopicModel> algo, ExtractorParams ep, int runCount, int iterations, boolean outputClass) {
 		super();
@@ -38,7 +38,7 @@ public class RunEDA extends jhn.eda.RunEDA {
 	protected void addListeners(ProbabilisticExplicitTopicModel eda) throws NoSuchMethodException, SecurityException, FileNotFoundException {
 //		eda.addListener(new PrintState(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir(), outputClass));
-		eda.addListener(new PrintFasterState(PRINT_INTERVAL, runDir(), outputClass));
+		eda.addListener(new PrintFasterState(PRINT_STATE_INTERVAL, runDir(), outputClass));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir(), false));
 //		eda.addListener(new PrintDocTopics(PRINT_INTERVAL, runDir()));
