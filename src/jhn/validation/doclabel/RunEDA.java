@@ -50,6 +50,11 @@ public class RunEDA extends jhn.eda.RunEDA {
 //		eda.addListener(new PrintTopTopicWords(PRINT_INTERVAL, runDir(), 10));
 	}
 	
+	public static void run(Class<? extends ProbabilisticExplicitTopicModel> algo, ExtractorParams ep, int runCount, int iterations, boolean outputClass) throws Exception {
+		RunEDA runner = new RunEDA(algo, ep, runCount, iterations, outputClass);
+		runner.run();
+	}
+	
 	public static void main(String[] args) throws Exception {
 		Class<? extends ProbabilisticExplicitTopicModel> algo = LDASTWD.class;
 //		Class<? extends EDA> algo = EDA2_1.class;
