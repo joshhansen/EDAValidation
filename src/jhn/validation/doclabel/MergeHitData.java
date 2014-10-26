@@ -90,9 +90,9 @@ public class MergeHitData extends Merger<String> {
 		System.out.println("Filename: " + docFilename);
 		
 		System.out.println(modelName(src1));
-		String[] labels1 = src1.labels(docFilename, chooseFromTopN);
+		String[] labels1 = src1.labels(docFilename.replaceFirst("file:", ""), chooseFromTopN);
 		System.out.println(modelName(src2));
-		String[] labels2 = src2.labels(docFilename, chooseFromTopN);
+		String[] labels2 = src2.labels(docFilename.replaceFirst("file:", ""), chooseFromTopN);
 		String label1 = cleanLabel(RandUtil.randItem(labels1));
 		String label2 = cleanLabel(RandUtil.randItem(labels2));
 		
