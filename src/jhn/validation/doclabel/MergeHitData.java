@@ -129,6 +129,8 @@ public class MergeHitData extends Merger<String> {
 		return header.toString();
 	}
 	
+	private static final Pattern edaFilenameRgx = Pattern.compile("run(\\d+)_iters\\d+-\\d+\\" + jhn.Paths.DOC_LABELS_EXT);
+	private static final Pattern lauFilenameRgx = Pattern.compile("lda10topics_(\\d+)\\" + jhn.Paths.DOC_LABELS_EXT);
 	public static void main(String[] args) throws Exception {
 		Class<? extends ProbabilisticExplicitTopicModel> algo = EDA.class;
 //		final String datasetName = "toy_dataset4";
@@ -140,10 +142,7 @@ public class MergeHitData extends Merger<String> {
 		final String edaLabelsDir = jhn.validation.Paths.edaDocLabelsDir(algo, datasetName);
 		final String lauLabelsDir = jhn.validation.Paths.lauDocLabelsDir(datasetName);
 		
-		Pattern edaFilenameRgx = Pattern.compile("run(\\d+)_iters\\d+-\\d+\\" + jhn.Paths.DOC_LABELS_EXT);
 		LabelSource<String> eda = new RandomRunsDocLabelSource(edaLabelsDir, edaFilenameRgx);
-		
-		Pattern lauFilenameRgx = Pattern.compile("lda10topics_(\\d+)\\" + jhn.Paths.DOC_LABELS_EXT);
 		LabelSource<String> lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir, lauFilenameRgx);
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
