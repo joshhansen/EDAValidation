@@ -11,8 +11,8 @@ import jhn.eda.LDASTWD;
 import jhn.eda.EDA;
 import jhn.eda.Paths;
 import jhn.eda.io.SampleSummaryFileReader;
-import jhn.eda.summarize.SampleSummarizer;
-import jhn.eda.summarize.SumSampleSummarizer;
+import jhn.eda.summarize.Sum;
+import jhn.eda.summarize.SummaryParams;
 import jhn.eda.tokentopics.DocTopicCounts;
 import jhn.io.TopTopicsWriter;
 
@@ -20,18 +20,21 @@ public class ComputeRunTopTopics {
 	public static void main(String[] args) throws Exception {
 //		Class<? extends EDA> algo = LDASTWD.class;
 		Class<? extends ProbabilisticExplicitTopicModel> algo = EDA.class;
-		SampleSummarizer summarizer = new SumSampleSummarizer();
-		String datasetName = "reuters21578_noblah2";
-//		String datasetName = "sotu_chunks";
+//		SampleSummarizer summarizer = new Sum();
+//		String datasetName = "reuters21578_noblah2";
+		String datasetName = "sotu_chunks";
+		
 		
 		final String runsDir = jhn.validation.Paths.edaRunsDir(algo, datasetName);
-		final int topicCount = 1000;
-		final boolean includeClass = true;
-//		final boolean includeClass = false;
+		final int topicCount = 100;
 		final int runCount = 5;
-		final int firstIter = 11;
-		final int lastIter = 50;
-		final int minCount = 2;
+		
+		SummaryParams sp = new SummaryParams();
+		sp.summarizerCls = Sum.class;
+		sp.firstIter = 11;
+		sp.lastIter = 50;
+		sp.minCount = 0;
+		sp.includeClass = true;
 		
 		
 		for(int run = 0; run < runCount; run++) {
@@ -40,7 +43,7 @@ public class ComputeRunTopTopics {
 			IntIntCounter topicCounts = new IntIntRAMCounter();
 
 			final String runDir = Paths.runDir(runsDir, run);
-			String summaryFilename = Paths.sampleSummaryFilename(summarizer.name(), runDir, firstIter, lastIter, minCount, includeClass);
+			String summaryFilename = Paths.sampleSummaryFilename(runDir, sp);
 			try(SampleSummaryFileReader r = new SampleSummaryFileReader(summaryFilename)) {
 				for(DocTopicCounts dtc : r) {
 					while(dtc.hasNext()) {
@@ -57,7 +60,5 @@ public class ComputeRunTopTopics {
 				}
 			}
 		}
-		
-
 	}
 }
