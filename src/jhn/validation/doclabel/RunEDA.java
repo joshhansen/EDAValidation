@@ -49,7 +49,6 @@ public class RunEDA extends jhn.eda.RunEDA {
 	
 	public static void main(String[] args) throws Exception {
 		Class<? extends ProbabilisticExplicitTopicModel> algo = LDASTWD.class;
-//		Class<? extends EDA> algo = EDA2.class;
 //		Class<? extends EDA> algo = EDA2_1.class;
 		
 		ExtractorParams ep = new ExtractorParams();
