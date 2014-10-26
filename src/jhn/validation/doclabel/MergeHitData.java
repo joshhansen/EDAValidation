@@ -133,12 +133,21 @@ public class MergeHitData extends Merger<String> {
 	private static final Pattern lauFilenameRgx = Pattern.compile("lda10topics_(\\d+)\\" + jhn.Paths.DOC_LABELS_EXT);
 	public static void main(String[] args) throws Exception {
 		Class<? extends ProbabilisticExplicitTopicModel> algo = EDA.class;
+		
+		final String topicWordIdxName = "wp_lucene4";
 //		final String datasetName = "toy_dataset4";
 		final String datasetName = "reuters21578_noblah2";
-		String topicWordIdxDir = jhn.Paths.topicWordIndexDir("wp_lucene4");
+//		final String datasetName = "sotu_chunks";
+		
 		final int numComparisons = 200;
 		final int chooseFromTopN = 1;
 		
+		merge(algo, topicWordIdxName, datasetName, numComparisons, chooseFromTopN);
+	}
+	
+	public static void merge(Class<? extends ProbabilisticExplicitTopicModel> algo, String topicWordIdxName, String datasetName,
+			int numComparisons, int chooseFromTopN) throws Exception {
+		String topicWordIdxDir = jhn.Paths.topicWordIndexDir(topicWordIdxName);
 		final String edaLabelsDir = jhn.validation.Paths.edaDocLabelsDir(algo, datasetName);
 		final String lauLabelsDir = jhn.validation.Paths.lauDocLabelsDir(datasetName);
 		
