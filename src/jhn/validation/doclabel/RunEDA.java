@@ -1,11 +1,13 @@
 package jhn.validation.doclabel;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import jhn.ExtractorParams;
 import jhn.eda.ProbabilisticExplicitTopicModel;
 import jhn.eda.LDASTWD;
 import jhn.eda.EDA;
+import jhn.eda.listeners.LogLikelihoodWriterListener;
 import jhn.eda.listeners.PrintFasterState;
 
 public class RunEDA extends jhn.eda.RunEDA {
@@ -39,6 +41,7 @@ public class RunEDA extends jhn.eda.RunEDA {
 //		eda.addListener(new PrintState(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir(), outputClass));
 		eda.addListener(new PrintFasterState(PRINT_STATE_INTERVAL, runDir(), outputClass));
+		eda.addListener(new LogLikelihoodWriterListener(jhn.eda.Paths.logLikelihoodFilename(runDir())));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintReducedDocsLibSVM(PRINT_INTERVAL, runDir(), false));
 //		eda.addListener(new PrintDocTopics(PRINT_INTERVAL, runDir()));
