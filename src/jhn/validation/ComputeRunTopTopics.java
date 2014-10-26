@@ -6,9 +6,9 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap;
 
 import jhn.counts.i.i.IntIntCounter;
 import jhn.counts.i.i.IntIntRAMCounter;
+import jhn.eda.ProbabilisticExplicitTopicModel;
+import jhn.eda.LDASTWD;
 import jhn.eda.EDA;
-import jhn.eda.EDA1;
-//import jhn.eda.EDA2;
 import jhn.eda.Paths;
 import jhn.eda.io.SampleSummaryFileReader;
 import jhn.eda.summarize.SampleSummarizer;
@@ -18,8 +18,8 @@ import jhn.io.TopTopicsWriter;
 
 public class ComputeRunTopTopics {
 	public static void main(String[] args) throws Exception {
-		Class<? extends EDA> algo = EDA1.class;
-//		Class<? extends EDA> algo = EDA2.class;
+//		Class<? extends EDA> algo = LDASTWD.class;
+		Class<? extends ProbabilisticExplicitTopicModel> algo = EDA.class;
 		SampleSummarizer summarizer = new SumSampleSummarizer();
 		String datasetName = "reuters21578_noblah2";
 //		String datasetName = "sotu_chunks";

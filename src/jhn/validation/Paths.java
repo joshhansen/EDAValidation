@@ -2,7 +2,7 @@ package jhn.validation;
 
 import java.util.regex.Pattern;
 
-import jhn.eda.EDA;
+import jhn.eda.ProbabilisticExplicitTopicModel;
 import jhn.esa.ESA;
 
 public class Paths {
@@ -70,15 +70,15 @@ public class Paths {
 		return lauDocLabelsDir(dataset) + "/" + name(numTopics, run) + jhn.Paths.DOC_LABELS_EXT;
 	}
 	
-	public static String edaRunsDir(Class<? extends EDA> algo, String dataset) {
+	public static String edaRunsDir(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset) {
 		return outputDir(algo, dataset) + "/runs";
 	}
 	
-	public static String edaDocLabelsDir(Class<? extends EDA> algo, String dataset) {
+	public static String edaDocLabelsDir(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset) {
 		return outputDir(algo, dataset) + "/doc_labels";
 	}
 	
-	public static String edaDocLabelsFilename(Class<? extends EDA> algo, String dataset, int firstIter, int lastIter, int run) {
+	public static String edaDocLabelsFilename(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset, int firstIter, int lastIter, int run) {
 		return edaDocLabelsDir(algo, dataset) + "/run" + run + "_iters" + firstIter + "-" + lastIter + jhn.Paths.DOC_LABELS_EXT;
 	}
 	
@@ -94,7 +94,7 @@ public class Paths {
 //		return outputDir(dataset) + "/hit_data";
 //	}
 	
-	public static String hitDataDir(Class<? extends EDA> algo, String dataset) {
+	public static String hitDataDir(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset) {
 		return outputDir(algo, dataset) + "/hit_data";
 	}
 	
@@ -102,7 +102,7 @@ public class Paths {
 		return outputDir(algo, dataset) + "/libsvm";
 	}
 	
-	public static String edaLibSvmFilename(Class<? extends EDA> algo, String dataset, String summarizerName, int run, int start, int stop, int minCount, boolean includesClass) {
+	public static String edaLibSvmFilename(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset, String summarizerName, int run, int start, int stop, int minCount, boolean includesClass) {
 		return libSvmDir(algo, dataset) + "/" + jhn.eda.Paths.sampleSummaryKey(summarizerName, start, stop, minCount, includesClass) + "_" + run + jhn.Paths.LIBSVM_EXT;
 	}
 	
@@ -110,7 +110,7 @@ public class Paths {
 		return libSvmDir(ESA.class, dataset) + "/" + topicWordIdx + ":" + dataset + "_top" + topN + jhn.Paths.LIBSVM_EXT;
 	}
 	
-	public static String mergedDocLabelsFilename(Class<? extends EDA> algo, String dataset, int numComparisons, int chooseFromTopN) {
+	public static String mergedDocLabelsFilename(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset, int numComparisons, int chooseFromTopN) {
 		return hitDataDir(algo, dataset) + "/merged_document_labels"
 			+ "_" + dataset
 			+ "_cmps" + numComparisons
@@ -118,7 +118,7 @@ public class Paths {
 			+ "_3" + HIT_EXT;
 	}
 	
-	public static String mergedTopicLabelsFilename(Class<? extends EDA> algo, String dataset, int numComparisons, int chooseFromTopN) {
+	public static String mergedTopicLabelsFilename(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset, int numComparisons, int chooseFromTopN) {
 		return hitDataDir(algo, dataset) + "/merged_topic_labels"
 			+ "_" + dataset
 			+ "_cmps" + numComparisons
@@ -126,11 +126,11 @@ public class Paths {
 			+ HIT_EXT;
 	}
 	
-	public static String topTopicsFilename(Class<? extends EDA> algo, String dataset) {
+	public static String topTopicsFilename(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset) {
 		return outputDir(algo, dataset) + "/top_topics" + TOP_TOPICS_EXT;
 	}
 	
-	public static String topTopicsFilename(Class<? extends EDA> algo, String dataset, int run) {
+	public static String topTopicsFilename(Class<? extends ProbabilisticExplicitTopicModel> algo, String dataset, int run) {
 		return outputDir(algo, dataset) + "/runs/" + run + "/top_topics" + TOP_TOPICS_EXT;
 	}
 }

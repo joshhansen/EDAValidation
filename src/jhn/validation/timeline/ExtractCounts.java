@@ -8,6 +8,7 @@ import org.apache.lucene.store.FSDirectory;
 import cc.mallet.types.Alphabet;
 import cc.mallet.types.InstanceList;
 
+import jhn.ExtractorParams;
 import jhn.eda.CountsExtractor;
 import jhn.eda.topiccounts.LuceneTopicCounts;
 import jhn.eda.topiccounts.TopicCounts;
@@ -29,18 +30,15 @@ public class ExtractCounts implements AutoCloseable {
 		srcTopicCounts = new LuceneTopicCounts(topicWordIdx);
 	}
 	
-	public void extract(String datasetName, String datasetFilename) throws Exception {
-		// Config
-		int minCount = 2;
+	public void extract(ExtractorParams ep, String datasetFilename) throws Exception {
+		System.out.println("Extracting " + ep.datasetName);
 		
-		System.out.println("Extracting " + datasetName);
-		
-		String topicMappingFilename =              jhn.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
-		String propsFilename =                 jhn.Paths.propsFilename(topicWordIdxName, datasetName, minCount);
-		String topicCountsFilename =           jhn.Paths.topicCountsFilename(topicWordIdxName, datasetName, minCount);
-		String restrictedTopicCountsFilename = jhn.Paths.restrictedTopicCountsFilename(topicWordIdxName, datasetName, minCount);
-		String filteredTopicCountsFilename =   jhn.Paths.filteredTopicCountsFilename(topicWordIdxName, datasetName, minCount);
-		String typeTopicCountsFilename =       jhn.Paths.typeTopicCountsFilename(topicWordIdxName, datasetName, minCount);
+		String topicMappingFilename =              jhn.Paths.topicMappingFilename(ep);
+		String propsFilename =                 jhn.Paths.propsFilename(ep);
+		String topicCountsFilename =           jhn.Paths.topicCountsFilename(ep);
+		String restrictedTopicCountsFilename = jhn.Paths.restrictedTopicCountsFilename(ep);
+		String filteredTopicCountsFilename =   jhn.Paths.filteredTopicCountsFilename(ep);
+		String typeTopicCountsFilename =       jhn.Paths.typeTopicCountsFilename(ep);
 		
 		// Load
 		InstanceList targetData = InstanceList.load(new File(datasetFilename));
@@ -54,7 +52,7 @@ public class ExtractCounts implements AutoCloseable {
 		
 		// Run
 		try(CountsExtractor ce = new CountsExtractor(srcTopicCounts, srcTypeTopicCounts, srcTopicTypeCounts,
-				typeCount, minCount, topicMappingFilename, propsFilename, topicCountsFilename, restrictedTopicCountsFilename,
+				typeCount, ep.minCount, topicMappingFilename, propsFilename, topicCountsFilename, restrictedTopicCountsFilename,
 				filteredTopicCountsFilename, typeTopicCountsFilename)) {
 			
 			ce.extract();
@@ -69,15 +67,18 @@ public class ExtractCounts implements AutoCloseable {
 	
 	public static void main(String[] args) throws Exception {
 		final int window = 40;
+		ExtractorParams ep = new ExtractorParams();
+		ep.topicWordIdxName = "wp_lucene4";
+		ep.minCount = 2;
 		
 		try(ExtractCounts tec = new ExtractCounts("wp_lucene4")) {
 			final String timelineDir = jhn.Paths.outputDir("LDA") + "/datasets/sotu_timeline";
 			for(int startYear = 1790; startYear < 2000; startYear += 20) {
 				int endYear = startYear + window;
 				
-				String datasetName = "sotu_" + startYear + "-" + endYear;
+				ep.datasetName = "sotu_" + startYear + "-" + endYear;
 				String datasetFilename = timelineDir + "/" + startYear + "-" + endYear + ".mallet";
-				tec.extract(datasetName, datasetFilename);
+				tec.extract(ep, datasetFilename);
 			}
 		}
 	}

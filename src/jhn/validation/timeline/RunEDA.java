@@ -1,6 +1,6 @@
 package jhn.validation.timeline;
 
-import jhn.eda.EDA;
+import jhn.eda.ProbabilisticExplicitTopicModel;
 import jhn.eda.listeners.PrintFastState;
 
 public class RunEDA extends jhn.eda.RunEDA {
@@ -17,14 +17,14 @@ public class RunEDA extends jhn.eda.RunEDA {
 		for(int startYear = 1790; startYear < 2000; startYear += 20) {
 			int endYear = startYear + window;
 			
-			this.datasetName = "sotu_" + startYear + "-" + endYear;
+			this.ep.datasetName = "sotu_" + startYear + "-" + endYear;
 			
 			super.run();
 		}
 	}
 	
 	@Override
-	protected void addListeners(EDA eda) throws NoSuchMethodException, SecurityException {
+	protected void addListeners(ProbabilisticExplicitTopicModel eda) throws NoSuchMethodException, SecurityException {
 		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir()));
 	}
 

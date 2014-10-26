@@ -2,23 +2,22 @@ package jhn.validation.doclabel;
 
 import java.io.File;
 
+import jhn.ExtractorParams;
+import jhn.eda.ProbabilisticExplicitTopicModel;
+import jhn.eda.LDASTWD;
 import jhn.eda.EDA;
-import jhn.eda.EDA1;
-import jhn.eda.EDA2;
-import jhn.eda.EDA2_1;
 import jhn.eda.listeners.PrintFasterState;
 
 public class RunEDA extends jhn.eda.RunEDA {
 	private static final int PRINT_INTERVAL = 1;
 	protected int runCount;
-	public RunEDA(Class<? extends EDA> algo, String datasetName, int runCount, int iterations, int minCount, boolean outputClass) {
+	public RunEDA(Class<? extends ProbabilisticExplicitTopicModel> algo, ExtractorParams ep, int runCount, int iterations, boolean outputClass) {
 		super();
+		this.ep = ep;
 		this.algo = algo;
-		this.datasetName = datasetName;
-		this.runsDir = jhn.validation.Paths.edaRunsDir(algo, datasetName);
+		this.runsDir = jhn.validation.Paths.edaRunsDir(algo, ep.datasetName);
 		this.runCount = runCount;
 		this.iterations = iterations;
-		this.minCount = minCount;
 		this.outputClass = outputClass;
 		
 		new File(this.runsDir).mkdirs();
@@ -36,7 +35,7 @@ public class RunEDA extends jhn.eda.RunEDA {
 	}
 	
 	@Override
-	protected void addListeners(EDA eda) throws NoSuchMethodException, SecurityException {
+	protected void addListeners(ProbabilisticExplicitTopicModel eda) throws NoSuchMethodException, SecurityException, FileNotFoundException {
 //		eda.addListener(new PrintState(PRINT_INTERVAL, runDir()));
 //		eda.addListener(new PrintFastState(PRINT_INTERVAL, runDir(), outputClass));
 		eda.addListener(new PrintFasterState(PRINT_INTERVAL, runDir(), outputClass));
@@ -49,17 +48,24 @@ public class RunEDA extends jhn.eda.RunEDA {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		Class<? extends ProbabilisticExplicitTopicModel> algo = LDASTWD.class;
 //		Class<? extends EDA> algo = EDA2.class;
-		Class<? extends EDA> algo = EDA2_1.class;
-//		final String datasetName = "reuters21578_noblah2";
-		final String datasetName = "sotu_chunks";
-//		final String datasetName = "toy_dataset4";
+//		Class<? extends EDA> algo = EDA2_1.class;
+		
+		ExtractorParams ep = new ExtractorParams();
+		ep.topicWordIdxName = "wp_lucene4";
+		
+//		ep.datasetName = "reuters21578_noblah2";
+		ep.datasetName = "sotu_chunks";
+//		ep.datasetName = "toy_dataset4";
+		
+		ep.minCount = 2;
+		
 		final boolean outputClass = true;
 		final int iterations = 50;
-		final int runCount = 5;
-		final int minCount = 2;
-		RunEDA runner = new RunEDA(algo, datasetName, runCount, iterations, minCount, outputClass);
-		runner.run();
+		final int runCount = 1;
+		
+		run(algo, ep, runCount, iterations, outputClass);
 	}
 
 }

@@ -14,6 +14,7 @@ import cc.mallet.types.LabelAlphabet;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap.Entry;
 
+import jhn.ExtractorParams;
 import jhn.counts.i.i.IntIntCounter;
 import jhn.counts.i.i.IntIntRAMCounter;
 import jhn.eda.Paths;
@@ -139,17 +140,19 @@ public class GenerateHitData {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		final int minCount = 2;
-		final String topicWordIdxName = "wp_lucene4";
-		final String datasetName = "reuters21578";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
+		ExtractorParams ep = new ExtractorParams();
+		ep.minCount = 2;
+		ep.topicWordIdxName = "wp_lucene4";
+		ep.datasetName = "reuters21578";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
+		
 		final int run = 17;
 		final int iteration = 95;
 		
 		final String runDir = Paths.runDir(Paths.defaultRunsDir(), run);
 		
 		String fastStateFilename =    Paths.fastStateFilename(runDir, iteration);
-		String topicWordIdxDir =      jhn.Paths.topicWordIndexDir("wp_lucene4");
-		String topicMappingFilename = jhn.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
+		String topicWordIdxDir =      jhn.Paths.topicWordIndexDir(ep.topicWordIdxName);
+		String topicMappingFilename = jhn.Paths.topicMappingFilename(ep);
 		String outputFilename =       Paths.topicLabelHitDataFilename(runDir, iteration);
 		
 		generate(fastStateFilename, topicWordIdxDir, topicMappingFilename, outputFilename);

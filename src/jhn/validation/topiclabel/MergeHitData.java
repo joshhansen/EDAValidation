@@ -9,8 +9,9 @@ import org.apache.lucene.store.FSDirectory;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
-import jhn.eda.EDA;
-import jhn.eda.EDA1;
+import jhn.ExtractorParams;
+import jhn.eda.ProbabilisticExplicitTopicModel;
+import jhn.eda.LDASTWD;
 //import jhn.eda.EDA2;
 import jhn.idx.IntIndex;
 import jhn.io.TopTopicsReader;
@@ -96,29 +97,33 @@ public class MergeHitData extends Merger<Integer> {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		final Class<? extends EDA> algo = EDA1.class;
+		final Class<? extends ProbabilisticExplicitTopicModel> algo = LDASTWD.class;
 //		final Class<? extends EDA> algo = EDA2.class;
 		final int topicCount = 20;
-		final String topicWordIdxName = "wp_lucene4";
-//		final String datasetName = "toy_dataset4";
-		final String datasetName = "reuters21578_noblah2";
-//		String datasetName = "sotu_chunks";
-		String topicWordIdxDir = jhn.Paths.topicWordIndexDir(topicWordIdxName);
+		
+		ExtractorParams ep = new ExtractorParams();
+		ep.topicWordIdxName = "wp_lucene4";
+//		ep.datasetName = "toy_dataset4";
+		ep.datasetName = "reuters21578_noblah2";
+//		ep.datasetName = "sotu_chunks";
+		ep.minCount = 2;
+		
+		String topicWordIdxDir = jhn.Paths.topicWordIndexDir(ep.topicWordIdxName);
 		final int numComparisons = 200;
 		final int chooseFromTopN = 1;
-		final int minCount = 2;
 		
-		final String lauLabelsDir = jhn.validation.Paths.lauTopicLabelsDir(datasetName);
+		
+		final String lauLabelsDir = jhn.validation.Paths.lauTopicLabelsDir(ep.datasetName);
 		
 		
 //		Pattern edaFilenameRgx = Pattern.compile("run(\\d+)_iters\\d+-\\d+\\" + jhn.Paths.DOC_LABELS_EXT);
 //		DocLabelSource eda = new RandomRunsDocLabelSource(edaLabelsDir, edaFilenameRgx);
 		IntSet allowedTopics = null;
-		try(TopTopicsReader r = new TopTopicsReader(Paths.topTopicsFilename(algo, datasetName))) {
+		try(TopTopicsReader r = new TopTopicsReader(Paths.topTopicsFilename(algo, ep.datasetName))) {
 			allowedTopics = r.readTopicsSet(100);
 		}
 		
-		String topicMappingFilename = jhn.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
+		String topicMappingFilename = jhn.Paths.topicMappingFilename(ep);
 		IntIndex topicMapping = (IntIndex) Util.deserialize(topicMappingFilename);
 		
 		IntSet actuallyAllowedTopics = new IntOpenHashSet();
@@ -126,7 +131,7 @@ public class MergeHitData extends Merger<Integer> {
 			actuallyAllowedTopics.add(topicMapping.objectAtI(i));
 		}
 		
-		LabelSource<Integer> eda = new RestrictedLuceneTopicLabelSource(topicWordIdxDir, datasetName, actuallyAllowedTopics);
+		LabelSource<Integer> eda = new RestrictedLuceneTopicLabelSource(topicWordIdxDir, ep.datasetName, actuallyAllowedTopics);
 		
 		Pattern lauFilenameRgx = Pattern.compile("lda" + topicCount + "topics_(\\d+)\\" + jhn.Paths.TOPIC_LABELS_EXT);
 //		DocLabelSource lauEtAl = new RandomRunsDocLabelSource(lauLabelsDir, lauFilenameRgx);
@@ -134,14 +139,14 @@ public class MergeHitData extends Merger<Integer> {
 		LabelSource<Integer> lauEtAl = new AggregateTopicLabelSource(lauLabelsDir, lauFilenameRgx);
 		
 		try(IndexReader topicWordIdx = IndexReader.open(FSDirectory.open(new File(topicWordIdxDir)))) {
-			LabelSource<Integer> random = new RestrictedRandomTopicLabelSource(topicWordIdx, datasetName, actuallyAllowedTopics);
+			LabelSource<Integer> random = new RestrictedRandomTopicLabelSource(topicWordIdx, ep.datasetName, actuallyAllowedTopics);
 			
-			File outputDir = new File(jhn.validation.Paths.hitDataDir(algo, datasetName));
+			File outputDir = new File(jhn.validation.Paths.hitDataDir(algo, ep.datasetName));
 			if(!outputDir.exists()) {
 				outputDir.mkdirs();
 			}
 			
-			String outputFilename = jhn.validation.Paths.mergedTopicLabelsFilename(algo, datasetName, numComparisons, chooseFromTopN) + ".2.restricted";
+			String outputFilename = jhn.validation.Paths.mergedTopicLabelsFilename(algo, ep.datasetName, numComparisons, chooseFromTopN) + ".2.restricted";
 			
 			MergeHitData mhd = new MergeHitData(numComparisons, outputFilename, chooseFromTopN);
 			mhd.addModel(eda, algo.getSimpleName(), 0.45);

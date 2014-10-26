@@ -2,10 +2,9 @@ package jhn.validation.doclabel;
 
 import java.util.Calendar;
 
+import jhn.eda.ProbabilisticExplicitTopicModel;
+import jhn.eda.LDASTWD;
 import jhn.eda.EDA;
-import jhn.eda.EDA1;
-import jhn.eda.EDA2;
-import jhn.eda.EDA2_1;
 import jhn.eda.Paths;
 import jhn.eda.summarize.SampleSummarizer;
 import jhn.eda.summarize.SumSampleSummarizer;
@@ -16,7 +15,7 @@ public class SummarizeSamples {
 		
 //		Class<? extends EDA> algo = EDA1.class;
 //		Class<? extends EDA> algo = EDA2.class;
-		Class<? extends EDA> algo = EDA2_1.class;
+		Class<? extends ProbabilisticExplicitTopicModel> algo = EDA.class;
 		SampleSummarizer summarizer = new SumSampleSummarizer();
 //		String datasetName = "reuters21578_noblah2";
 //		String datasetName = "sotu_chunks";

@@ -1,12 +1,12 @@
 package jhn.validation.eda;
 
-import jhn.eda.EDA;
-import jhn.eda.EDA1;
+import jhn.eda.ProbabilisticExplicitTopicModel;
+import jhn.eda.LDASTWD;
 import jhn.eda.io.SampleSummaryToLibSVM;
 
 public class SampleSummariesToLibSVM {
 	public static void main(String[] args) throws Exception {
-		final Class<? extends EDA> algo = EDA1.class;
+		final Class<? extends ProbabilisticExplicitTopicModel> algo = LDASTWD.class;
 		final int minCount = 2;
 		final boolean includesClass = true;
 		final String datasetName = "reuters21578_noblah2";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578

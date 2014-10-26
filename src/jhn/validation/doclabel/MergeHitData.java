@@ -14,8 +14,8 @@ import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.types.LabelAlphabet;
 
+import jhn.eda.ProbabilisticExplicitTopicModel;
 import jhn.eda.EDA;
-import jhn.eda.EDA2;
 import jhn.eda.lucene.LuceneLabelAlphabet;
 import jhn.label.LabelSource;
 import jhn.label.doc.DocLabelSource;
@@ -130,7 +130,7 @@ public class MergeHitData extends Merger<String> {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Class<? extends EDA> algo = EDA2.class;
+		Class<? extends ProbabilisticExplicitTopicModel> algo = EDA.class;
 //		final String datasetName = "toy_dataset4";
 		final String datasetName = "reuters21578_noblah2";
 		String topicWordIdxDir = jhn.Paths.topicWordIndexDir("wp_lucene4");
