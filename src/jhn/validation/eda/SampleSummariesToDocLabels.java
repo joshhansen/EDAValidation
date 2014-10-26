@@ -14,20 +14,23 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap.Entry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+import jhn.ExtractorParams;
 import jhn.counts.Counter;
 import jhn.counts.i.i.IntIntCounter;
 import jhn.counts.i.i.i.IntIntIntCounterMap;
 import jhn.counts.i.i.i.IntIntIntRAMCounterMap;
+import jhn.eda.ProbabilisticExplicitTopicModel;
 import jhn.eda.EDA;
-import jhn.eda.EDA2;
 import jhn.eda.io.SampleSummaryFileReader;
 import jhn.eda.lucene.LuceneLabelAlphabet;
+import jhn.eda.summarize.Sum;
+import jhn.eda.summarize.SummaryParams;
 import jhn.eda.tokentopics.DocTopicCounts;
 import jhn.idx.IntIndex;
 import jhn.io.DocLabelsFileWriter;
 import jhn.util.Util;
 
-public class EDASampleSummariesToDocLabels {
+public class SampleSummariesToDocLabels {
 	public static IntIntIntCounterMap docTopicCounts(String sampleSummaryFilename) throws Exception {
 		System.out.println(sampleSummaryFilename);
 		IntIntIntCounterMap counts = new IntIntIntRAMCounterMap();
@@ -39,29 +42,6 @@ public class EDASampleSummariesToDocLabels {
 					subcounts.set(dtc.nextInt(), dtc.nextDocTopicCount());
 				}
 			}
-//			int docNum;
-//			int lineNum = 0;
-//			String tmp = null;
-//			String[] parts;
-//			String[] subparts;
-//			while( (tmp=r.readLine()) != null) {
-//				if(!tmp.startsWith("#")) {
-//					parts = tmp.split("\\s+");
-//					
-//					docNum = Integer.parseInt(parts[0]);
-//					
-//					for(int i = 2; i < parts.length; i++) {
-//						subparts = parts[i].split(":");
-//						counts.set(docNum, Integer.parseInt(subparts[0]), Integer.parseInt(subparts[1]));
-//					}
-//					
-//					lineNum++;
-//					System.out.print('.');
-//					if(lineNum > 0 && lineNum % 120 == 0) {
-//						System.out.println(lineNum);
-//					}
-//				}
-//			}
 		}
 		
 		return counts;
@@ -75,19 +55,6 @@ public class EDASampleSummariesToDocLabels {
 				sources.put(dtc.docNum(), dtc.docSource());
 			}
 		}
-		
-//		try(BufferedReader r = new BufferedReader(new FileReader(sampleSummaryFilename))) {
-//			int docNum;
-//			String tmp = null;
-//			String[] parts;
-//			while( (tmp=r.readLine()) != null) {
-//				if(!tmp.startsWith("#")) {
-//					parts = tmp.split("\\s+");
-//					docNum = Integer.parseInt(parts[0]);
-//					sources.put(docNum, parts[1]);
-//				}
-//			}
-//		}
 		
 		return sources;
 	}
@@ -147,61 +114,46 @@ public class EDASampleSummariesToDocLabels {
 				w.endDocument();
 			}
 		}
-		
-//		try(PrintStream w = new PrintStream(new FileOutputStream(outputFilename))) {
-//			w.println("#docnum,source,topic1label,topic2label,topic3label,topic4label,topic5label,topic6label,topic7label,topic8label,topic9label,topic10label");
-//			
-//			int topicNum;
-//			int globalTopicNum;
-//			String label;
-//			
-//			@SuppressWarnings("unchecked")
-//			Int2ObjectMap.Entry<Counter<Integer,Integer>>[] entries = docTopicCounts.int2ObjectEntrySet().toArray(new Int2ObjectMap.Entry[0]);
-//			Arrays.sort(entries, cmp);
-//			
-//			for(Int2ObjectMap.Entry<Counter<Integer,Integer>> entry : entries) {
-//				w.print(entry.getIntKey());
-//				w.print(',');
-//				w.print(docFilenames.get(entry.getIntKey()));
-//				
-//				for(Int2IntMap.Entry count : ((IntIntCounter)entry.getValue()).fastTopN(topNlabels)) {
-//					topicNum = count.getIntKey();
-//					globalTopicNum = topicMapping.objectAtI(topicNum);
-//					label = labels.lookupObject(globalTopicNum).toString();
-//					
-//					w.print(",\"");
-//					w.print(label);
-//					w.print("\"");
-//				}
-//				w.println();
-//			}
-//		}//end try
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Class<? extends EDA> algo = EDA2.class;
-		final int minCount = 2;
-		final String topicWordIdxName = "wp_lucene4";
-		final String datasetName = "reuters21578_noblah2";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
-		final String summarizer = "sum";
+		Class<? extends ProbabilisticExplicitTopicModel> algo = EDA.class;
+		final ExtractorParams ep = new ExtractorParams();
+		ep.minCount = 2;
+		
+		ep.topicWordIdxName = "wp_lucene4";
+		ep.datasetName = "reuters21578_noblah2";// toy_dataset2 debates2012 sacred_texts state_of_the_union reuters21578
+//		ep.datasetName = "sotu_chunks";
 //		final int run = 17;
 //		final int iteration = 95;
 //		final int lastN = 10;
-		final int firstIter = 11;
-		final int lastIter = 50;
+		
+		SummaryParams sp = new SummaryParams();
+		sp.summarizerCls = Sum.class;
+		sp.firstIter = 10;
+		sp.lastIter = 50;
+		sp.minCount = 0;
+		sp.includeClass = true;
+		
 		final int topNlabels = 10;
 		final int runCount = 5;
 		
-		final String runsDir = jhn.validation.Paths.edaRunsDir(algo, datasetName);
+		convert(algo, ep, runCount, sp, topNlabels);
+	}
+	
+	public static void convert(Class<? extends ProbabilisticExplicitTopicModel> algo, ExtractorParams ep, int runCount, SummaryParams sp, int topNlabels) throws Exception {
+		final String runsDir = jhn.validation.Paths.edaRunsDir(algo, ep.datasetName);
+		
+		new File(jhn.validation.Paths.edaDocLabelsDir(algo, ep.datasetName)).mkdirs();
 		
 		for(int run = 0; run < runCount; run++) {
 			String runDir = jhn.eda.Paths.runDir(runsDir, run);
 			
 	//		String fastStateFilename =    Paths.fastStateFilename(run, iteration);
-			String sampleSummaryFilename = jhn.eda.Paths.sampleSummaryFilename(summarizer, runDir, firstIter, lastIter, minCount);
-			String topicWordIdxDir =      jhn.Paths.topicWordIndexDir("wp_lucene4");
-			String topicMappingFilename = jhn.Paths.topicMappingFilename(topicWordIdxName, datasetName, minCount);
-			String outputFilename =       jhn.validation.Paths.edaDocLabelsFilename(algo, datasetName, firstIter, lastIter, run);
+			String sampleSummaryFilename = jhn.eda.Paths.sampleSummaryFilename(runDir, sp);
+			String topicWordIdxDir =      jhn.Paths.topicWordIndexDir(ep.topicWordIdxName);
+			String topicMappingFilename = jhn.Paths.topicMappingFilename(ep);
+			String outputFilename =       jhn.validation.Paths.edaDocLabelsFilename(algo, ep.datasetName, sp.firstIter, sp.lastIter, run);
 			
 			generate(sampleSummaryFilename, topicWordIdxDir, topicMappingFilename, outputFilename, topNlabels);
 		}
